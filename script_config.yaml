@@ -1,0 +1,11 @@
+url: 'https://tutorialsninja.com/demo/'
+steps:
+  - element_locator: 'LINK_TEXT'
+    element_locator_value: 'Tablets'
+    interaction: 'click'
+  - element_locator: 'LINK_TEXT'
+    element_locator_value: 'Samsung Galaxy Tab 10.1'
+    interaction: 'click'
+  - element_locator: 'ID'
+    element_locator_value: 'button-cart'
+    interaction: 'click'

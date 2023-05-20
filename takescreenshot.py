@@ -1,13 +1,25 @@
+import shutil
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-
 import yaml
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+
 from yaml_validator import validate_yaml_schema
 
+
 def take_screenshot_from_yaml(config_file, output_file):
+    # Retrieve Chromedriver path
+    try:
+        # Download and install Chromedriver using webdriver_manager
+        chromedriver_path = ChromeDriverManager().install()
+    except Exception as e:
+        print("Failed to download Chromedriver:", e)
+        # Handle the Chromedriver download failure as per your requirements
+        # You can exit the script or take appropriate actions
+        return
+
     # Load the YAML configuration file
     with open(config_file, 'r') as file:
         config = yaml.safe_load(file)
@@ -21,12 +33,9 @@ def take_screenshot_from_yaml(config_file, output_file):
     url = config['url']
     steps = config['steps']
 
-    # Set the path to chromedriver executable
-    chromedriver_path = 'path/to/chromedriver'
-
     # Set the options for ChromeDriver
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')  # Run Chrome in headless mode (without GUI)
+    # options.add_argument('--headless')  # Run Chrome in headless mode (without GUI)
 
     # Launch ChromeDriver with the specified path and options
     driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
@@ -46,7 +55,6 @@ def take_screenshot_from_yaml(config_file, output_file):
 
         # Find the element based on the locator
         element = wait.until(EC.presence_of_element_located((getattr(By, element_locator), element_locator_value)))
-
         # Perform the specified interaction with the element
         if interaction == 'click':
             element.click()
