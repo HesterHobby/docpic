@@ -1,24 +1,13 @@
-import shutil
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import yaml
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 
 from yaml_validator import validate_yaml_schema
-
+from webdriver_initializer import initialize_driver
 
 def take_screenshot_from_yaml(config_file, output_file):
-    # Retrieve Chromedriver path
-    try:
-        # Download and install Chromedriver using webdriver_manager
-        chromedriver_path = ChromeDriverManager().install()
-    except Exception as e:
-        print("Failed to download Chromedriver:", e)
-        # Handle the Chromedriver download failure as per your requirements
-        # You can exit the script or take appropriate actions
-        return
 
     # Load the YAML configuration file
     with open(config_file, 'r') as file:
@@ -33,12 +22,15 @@ def take_screenshot_from_yaml(config_file, output_file):
     url = config['url']
     steps = config['steps']
 
-    # Set the options for ChromeDriver
-    options = webdriver.ChromeOptions()
-    # options.add_argument('--headless')  # Run Chrome in headless mode (without GUI)
+    # Get options from the YAML data, if available
+    options = config.get('webdriver_options', None)
 
     # Launch ChromeDriver with the specified path and options
-    driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
+    driver = initialize_driver(options)
+
+    if driver == None:
+        print("Driver initialisation failed")
+        return
 
     # Visit the specified URL
     driver.get(url)
@@ -60,6 +52,12 @@ def take_screenshot_from_yaml(config_file, output_file):
             element.click()
         elif interaction == 'write_text':
             element.send_keys(interaction_value)
+
+    # Wait for the final element.
+    final_element = config.get('final_element')
+    element_locator = final_element['element_locator']
+    element_locator_value = final_element['element_locator_value']
+    wait.until(EC.presence_of_element_located((getattr(By, element_locator), element_locator_value)))
 
     # Take a screenshot and save it to the output file
     driver.save_screenshot(output_file)

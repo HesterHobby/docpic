@@ -1,4 +1,13 @@
+# Initial URL
 url: 'https://tutorialsninja.com/demo/'
+
+# Webdriver options as per https://peter.sh/experiments/chromium-command-line-switches/
+webdriver_options:
+  headless: false
+  window-size: "1280,700"
+
+# Define the steps that will be carried out by the script before the screenshot is taken.
+# element_locators are the Selenium By enumerators
 steps:
   - element_locator: 'LINK_TEXT'
     element_locator_value: 'Tablets'
@@ -9,3 +18,7 @@ steps:
   - element_locator: 'ID'
     element_locator_value: 'button-cart'
     interaction: 'click'
+# Wait for this element before taking screenshot.
+final_element:
+  element_locator: 'CSS_SELECTOR'
+  element_locator_value: 'div.alert.alert-success.alert-dismissible'
