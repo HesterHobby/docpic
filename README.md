@@ -1,2 +1,2 @@
-# seleniumScreenshots
-Messing with screenshot functionality in selenium
+# docpic
+A selenium framework for adding screenshots to documentation.
