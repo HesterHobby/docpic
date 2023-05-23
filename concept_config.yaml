@@ -1,0 +1,64 @@
+# From Andy - conceptual structure for yaml with a view to implementing a DSL to steer the creation of these.
+
+# Define the steps that will be carried out by the script before the screenshot is taken.
+steps:
+  - type: identify # action type
+    var: login_form
+    using: css
+    selector: "#login-form"
+  - type: identify
+    var: username_field
+    using: css
+    in:
+      type: var-ref
+      var-name: login_form
+    selector: "#username"
+  - type: identify
+    var: password_field
+    using: css
+    in:
+      type: var-ref
+      var-name: login_form
+    selector: "#password"
+  - type: enter-text
+    target:
+      type: var-ref
+      var-name: username
+    value: "hester"
+  - type: enter-text
+    target:
+      type: var-ref
+      var-name: password
+    value: "pass1"
+  - type: click
+    target:
+      type: identify # note nesting of the structure, I guess you could do this indefinitely if you felt like it. No doubt wants something recursive to parse.
+      var: ~ # no variable
+      using: css
+      selector: "#login_go"
+
+# Below the script that would generate this.
+# identify login_form using css "#login-form"
+# identify username_field in login_form using css "#username"
+# identify password_field in login_form using css "#password"
+## We now have three variables defined: login_form, username_field and password_field; login_form has already been used.
+#
+# enter text "hester" into username_field
+# enter text "pass1" into password_field
+#
+# click on (identify in login_form using css "#login_go")
+## Note the nice shorthand here, although it is not required
+
+## Also.
+# We should consider a global config that takes care of logging in, and probably also the browser settings and things that
+# are not going to change globally. It'll look something like this:
+#starting-points:
+#  logged-in-to-site:
+#    url: "https://www.example.com"
+#    steps:
+#      # Login steps here
+
+# Then the individual screenshot yaml will simply enter at the correct point, e.g.
+#from: logged-in-to-site
+#steps:
+#  - step 1 here
