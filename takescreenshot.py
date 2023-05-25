@@ -64,3 +64,46 @@ def take_screenshot_from_yaml(config_file, output_file):
 
     # Close the browser
     driver.quit()
+
+def take_screenshot_from_yaml_new(config_file, output_file):
+    # Load the YAML configuration file
+    with open(config_file, 'r') as file:
+        config = yaml.safe_load(file)
+
+    # Validate the YAML schema
+    if not validate_yaml_schema(config):
+        print("Invalid YAML schema.")
+        return
+
+    # Extract the configuration values
+    url = config['url']
+    steps = config['steps']
+
+    # Get options from the YAML data, if available
+    options = config.get('webdriver_options', None)
+
+    # Launch ChromeDriver with the specified path and options
+    driver = initialize_driver(options)
+
+    if driver == None:
+        print("Driver initialisation failed")
+        return
+
+    # Visit the specified URL
+    driver.get(url)
+
+    # Create WebDriverWait object outside the loop
+    wait = WebDriverWait(driver, 10)
+
+    for step in steps:
+        # Decide what type of step it is
+        steptype = step['type']
+
+        # Send it off to another function to implement this step? That feels fairly sane.
+        # Decide how to handle return values and actions.
+
+
+    # Things to be resolved:
+    # Do we, or do we now need recursion? It'll be clunky if we don't have it.
+    # learn how to use dictionaries, that is how the variables will be created and assigned to on the fly.
+

@@ -51,3 +51,69 @@ def validate_yaml_schema(config):
         return True
     except Exception:
         return False
+
+def validate_new_yaml_schema(config):
+    schema = {
+        "type": "object",
+        "properties": {
+            "steps": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": ["identify", "enter-text", "click"]
+                        },
+                        "var": {
+                            "type": "string"
+                        },
+                        "using": {
+                            "type": "string"
+                        },
+                        "selector": {
+                            "type": "string"
+                        },
+                        "in": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "enum": ["var-ref"]
+                                },
+                                "var-name": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["type", "var-name"],
+                            "additionalProperties": False,
+                            # I think the below works - it should enforce the rule that "target" and "selector" should never be used
+                            # in the same step at the same level. To test.
+                            "dependencies": {
+                                "selector": {
+                                    "not": ["target"]
+                                },
+                                "target": {
+                                    "not": ["selector"]
+                                }
+                            }
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": False
+                }
+            }
+        },
+        "required": ["steps"],
+        "additionalProperties": False
+    }
+
+    try:
+        yaml_data = yaml.safe_load(config)
+        validate(yaml_data, schema)
+        print("Schema validation successful.")
+    except Exception as e:
+        print(f"Schema validation failed: {str(e)}")

@@ -1,0 +1,38 @@
+# Initial URL
+url: 'https://tutorialsninja.com/demo/'
+
+# Webdriver options as per https://peter.sh/experiments/chromium-command-line-switches/
+webdriver_options:
+  headless: false
+  window-size: "1280,700"
+
+# Define the steps that will be carried out by the script before the screenshot is taken.
+
+steps:
+  - type: identify # action type
+    var: tablets_link
+    using: link_text
+    selector: "Tablets"
+  - type: click
+    target:
+      type: var-ref
+      var-name: tablets_link
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: link_text
+      selector: "Samsung Galaxy Tab 10.1"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: id
+      selector: "button-cart"
+  - type: identify
+    var: ~
+    using: css
+    selector: "div.alert.alert-success.alert-dismissible"
+  - type: docpic # docpic could be extended, I would like this to be able to focus on a particular element.
+                 # Ideally there'd be a post-processing step that can highlight elements of interest or add text or both.
+
