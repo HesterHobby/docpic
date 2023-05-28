@@ -69,7 +69,8 @@ def validate_new_yaml_schema(config):
                             "type": "string"
                         },
                         "using": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": ["id", "class", "tag", "name", "link", "partial-link", "css", "xpath"]
                         },
                         "selector": {
                             "type": "string"
@@ -87,8 +88,9 @@ def validate_new_yaml_schema(config):
                             },
                             "required": ["type", "var-name"],
                             "additionalProperties": False,
-                            # I think the below works - it should enforce the rule that "target" and "selector" should never be used
-                            # in the same step at the same level. To test.
+                            # I think the below works - it should enforce the rule that "target" and "selector"
+                            # should never be used in the same step at the same level.
+                            # To test.
                             "dependencies": {
                                 "selector": {
                                     "not": ["target"]
