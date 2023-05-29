@@ -13,14 +13,12 @@ from webdriver_initializer import initialize_driver
 module_vars = {}
 
 
-
-
 def take_screenshot_from_yaml(config_file):
     # Load the YAML configuration file
     try:
         with open(config_file, 'r') as file:
             config = yaml.safe_load(file)
-    except:
+    except Exception:
         print("Could not open config file " + config_file)
         raise
 

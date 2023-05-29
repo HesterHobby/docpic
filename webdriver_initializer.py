@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.common import WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 
+
 def initialize_driver(webdriver_options):
     options = webdriver.ChromeOptions()
 

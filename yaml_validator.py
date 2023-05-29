@@ -50,7 +50,7 @@ def validate_yaml_schema(config):
                                 }
                             },
                             "required": ["type"],
-                            "additionalProperties": True # Account for "target" being a new item - not pretty, dislike.
+                            "additionalProperties": True  # Account for "target" being a new item - not pretty, dislike.
                         },
                         "value": {
                             "type": "string"
