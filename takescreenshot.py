@@ -110,51 +110,33 @@ def take_screenshot_from_yaml_new(config_file):
 
 # Function that deals with steps
 def execute_step(step, driver: webdriver):  # Not sure what type steps is here
-    print("Recursion not working atm, otherwise OK")
+
     # Create WebDriverWait object outside the loop
     wait = WebDriverWait(driver, 10)
-    if step.get("target") is None or step.get("target").get("type") == "var-ref":
-        # No targets required or our target is assigned to a variable - we are at the final level.
-        # This is clunky and likely to need changing.
+    type = step.get("type")
 
-        # Do stuff
-        type = step.get("type")
-        if type == "identify":
-            identify(wait, step.get("using"), step.get("selector"), step.get("var"))
-            return
+    if type == "identify":
+        element = identify(wait, step.get("using"), step.get("selector"), step.get("var"))
+        return element
 
-        if type == "click":
-            target = step.get("target")
-            if target.get("type") == "var-ref":
-                click(target.get("var-name"))
-            else:
-                click()  # Using tempvar. I don't believe we currently hit this line ever.
-            return
+    if type == "var-ref":
+        element = get_element_from_varname(step.get("var-name"))
+        return element
 
-        if type == "enter-text":
-            target = step.get("target")
-            text = step.get("value")
-            if target.get("type") == "var-ref":
-                enter_text(text, target.get("var-name"))
-            else:
-                enter_text(text)  # Using tempvar
-            return
+    if type == "click":
+        element = execute_step(step.get("target"), driver) if step.get("target") else None
+        click(element)
 
-        if type == "docpic":
-            outputfile = step.get("outfile")
-            docpic(driver, outputfile)
-            return
+    if type == "enter-text":
+        element = execute_step(step.get("target"), driver) if step.get("target") else None
+        enter_text(element, step.get("value"))
 
-    # In case of an undefined target: recur.
-    execute_step(step.get("target"), driver)
-
-    # Can we do the calling with tempvar here??
-    print("we have reached the end of the recursion")
+    if type == "docpic":
+        outfile = step.get("outfile")
+        docpic(driver, outfile)
 
 
 def identify(wait: WebDriverWait, using: str, selector: str, varname: str):
-    if varname is None:
-        varname = "tempvar"
     by_mapping = {
         'id': By.ID,
         'class': By.CLASS_NAME,
@@ -169,22 +151,22 @@ def identify(wait: WebDriverWait, using: str, selector: str, varname: str):
     locator_type = by_mapping.get(using)
 
     # Get the item, add to varname
-    element = None
     try:
         element = wait.until(EC.visibility_of_element_located((locator_type, selector)))
     except NoSuchElementException:
         print("The element" + selector + " was not found on this page")
         raise
-    module_vars[varname] = element
+
+    if varname is not None:
+        module_vars[varname] = element
+    return element
 
 
-def click(element_var_name: str = "tempvar"):
-    element = get_element_from_varname(element_var_name)
+def click(element: WebElement):
     element.click()
 
 
-def enter_text(text: str, element_var_name: str = "tempvar"):
-    element = get_element_from_varname(element_var_name)
+def enter_text(element: WebElement, text: str):
     element.send_keys(text)
 
 
@@ -192,7 +174,7 @@ def docpic(driver: webdriver, outfile: str):
     try:
         driver.save_screenshot(outfile)
         print("Screenshot has been saved to " + outfile)
-    except:
+    except Exception:
         print("Error saving output file to " + outfile)
         raise
 
