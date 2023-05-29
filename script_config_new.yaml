@@ -11,7 +11,7 @@ webdriver_options:
 steps:
   - type: identify # action type
     var: tablets_link
-    using: link_text
+    using: link
     selector: "Tablets"
   - type: click
     target:
@@ -21,7 +21,7 @@ steps:
     target:
       type: identify
       var: ~
-      using: link_text
+      using: link
       selector: "Samsung Galaxy Tab 10.1"
   - type: click
     target:

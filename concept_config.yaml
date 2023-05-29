@@ -46,7 +46,7 @@ steps:
 # enter text "hester" into username_field
 # enter text "pass1" into password_field
 #
-# click on (identify in login_form using css "#login_go")
+# click on (identify using css "#login_go")
 ## Note the nice shorthand here, although it is not required
 
 ## Also.
@@ -62,3 +62,5 @@ steps:
 #from: logged-in-to-site
 #steps:
 #  - step 1 here
+
+# Also we need to consider "switch to" as a type - for new tabs, and frames.

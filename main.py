@@ -1,5 +1,5 @@
 # This is a sample Python script.
-from takescreenshot import take_screenshot_from_yaml
+from takescreenshot import take_screenshot_from_yaml_new
 
 
 # Press Shift+F10 to execute it or replace it with your code.
@@ -13,6 +13,6 @@ def print_hi(name):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    take_screenshot_from_yaml("script_config.yaml", "test.png")
-
+    #take_screenshot_from_yaml("script_config.yaml", "test.png")
+    take_screenshot_from_yaml_new("script_config_new.yaml")
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

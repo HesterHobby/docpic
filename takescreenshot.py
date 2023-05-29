@@ -8,6 +8,7 @@ from selenium.common.exceptions import NoSuchElementException
 import yaml
 
 from yaml_validator import validate_yaml_schema
+from yaml_validator import validate_new_yaml_schema
 from webdriver_initializer import initialize_driver
 
 module_vars = {}
@@ -71,13 +72,17 @@ def take_screenshot_from_yaml(config_file, output_file):
     driver.quit()
 
 
-def take_screenshot_from_yaml_new(config_file, output_file):
+def take_screenshot_from_yaml_new(config_file):
     # Load the YAML configuration file
-    with open(config_file, 'r') as file:
-        config = yaml.safe_load(file)
+    try:
+        with open(config_file, 'r') as file:
+            config = yaml.safe_load(file)
+    except:
+        print("Could not open config file " + config_file)
+        raise
 
     # Validate the YAML schema
-    if not validate_yaml_schema(config):
+    if not validate_new_yaml_schema(config):
         print("Invalid YAML schema.")
         return
 
@@ -98,21 +103,58 @@ def take_screenshot_from_yaml_new(config_file, output_file):
     # Visit the specified URL
     driver.get(url)
 
-    # Create WebDriverWait object outside the loop
-    wait = WebDriverWait(driver, 10)
-
     # Send it off to recursive function to deal with steps.
-    execute_steps(steps)
-
-    print("Screenshot has been saved to " + output_file)
+    for step in steps:
+        execute_step(step, driver)
 
 
 # Function that deals with steps
-def execute_steps(steps):  # Not sure what type steps is here
-    print("Not quite implemented yet")
+def execute_step(step, driver: webdriver):  # Not sure what type steps is here
+    print("Recursion not working atm, otherwise OK")
+    # Create WebDriverWait object outside the loop
+    wait = WebDriverWait(driver, 10)
+    if step.get("target") is None or step.get("target").get("type") == "var-ref":
+        # No targets required or our target is assigned to a variable - we are at the final level.
+        # This is clunky and likely to need changing.
+
+        # Do stuff
+        type = step.get("type")
+        if type == "identify":
+            identify(wait, step.get("using"), step.get("selector"), step.get("var"))
+            return
+
+        if type == "click":
+            target = step.get("target")
+            if target.get("type") == "var-ref":
+                click(target.get("var-name"))
+            else:
+                click()  # Using tempvar. I don't believe we currently hit this line ever.
+            return
+
+        if type == "enter-text":
+            target = step.get("target")
+            text = step.get("value")
+            if target.get("type") == "var-ref":
+                enter_text(text, target.get("var-name"))
+            else:
+                enter_text(text)  # Using tempvar
+            return
+
+        if type == "docpic":
+            outputfile = step.get("outfile")
+            docpic(driver, outputfile)
+            return
+
+    # In case of an undefined target: recur.
+    execute_step(step.get("target"), driver)
+
+    # Can we do the calling with tempvar here??
+    print("we have reached the end of the recursion")
 
 
-def identify(wait: WebDriverWait, using: str, selector: str, varname: str = "tempvar"):
+def identify(wait: WebDriverWait, using: str, selector: str, varname: str):
+    if varname is None:
+        varname = "tempvar"
     by_mapping = {
         'id': By.ID,
         'class': By.CLASS_NAME,
@@ -129,19 +171,19 @@ def identify(wait: WebDriverWait, using: str, selector: str, varname: str = "tem
     # Get the item, add to varname
     element = None
     try:
-        element = wait.until((EC.visibility_of_element_located(locator_type), selector))
+        element = wait.until(EC.visibility_of_element_located((locator_type, selector)))
     except NoSuchElementException:
         print("The element" + selector + " was not found on this page")
         raise
     module_vars[varname] = element
 
 
-def click(element_var_name: str):
+def click(element_var_name: str = "tempvar"):
     element = get_element_from_varname(element_var_name)
     element.click()
 
 
-def enter_text(element_var_name: str, text: str):
+def enter_text(text: str, element_var_name: str = "tempvar"):
     element = get_element_from_varname(element_var_name)
     element.send_keys(text)
 
@@ -149,6 +191,7 @@ def enter_text(element_var_name: str, text: str):
 def docpic(driver: webdriver, outfile: str):
     try:
         driver.save_screenshot(outfile)
+        print("Screenshot has been saved to " + outfile)
     except:
         print("Error saving output file to " + outfile)
         raise
