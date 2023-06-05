@@ -9,7 +9,7 @@ steps:
   - type: identify
     var: username_field
     using: css
-    in:
+    in: # Note "in" has not been implemented, I'm not sure it's necessary.
       type: var-ref
       var-name: login_form
     selector: "#username"

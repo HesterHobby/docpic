@@ -2,6 +2,123 @@
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+def validate_yaml_schema2(config):
+    schema = {
+        "$defs": {
+            "identifyNode": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "identify"
+                        },
+                    "var": {
+                        "type": "string"
+                    },
+                    "using": {
+                        "type": "string",
+                        "enum": ["id", "class", "tag", "name", "link", "partial-link", "css", "xpath"]
+                    },
+                    "selector": {
+                        "type": "string"
+                    },
+                    "required": ["type", "using", "selector"],
+                    "additionalProperties": False
+                }
+            },
+            "varRefNode": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                      "const": "var-ref"
+                    },
+                    "var-name": {
+                        "type": "string"
+                    },
+                    "required": ["type", "var-name"],
+                    "additionalProperties": False
+                }
+            },
+            "clickNode": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "click"
+                    },
+                    "target": {
+                        "type": "object",
+                        "oneOf": [
+                            {"$ref": "#/$defs/identifyNode"},
+                            {"$ref": "#/$defs/varRefNode"}
+                        ]
+                    },
+                    "required": ["type", "target"],
+                    "additionalProperties": False
+                }
+            },
+            "enterTextNode": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "enter-text"
+                    },
+                    "target": {
+                        "type": "object",
+                        "oneOf": [
+                            {"$ref": "#/$defs/identifyNode"},
+                            {"$ref": "#/$defs/varRefNode"}
+                        ]
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "required": ["type", "target", "value"],
+                    "additionalProperties": False
+                }
+            },
+            "docpicNode": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "const": "docpic"
+                    },
+                    "outfile": {
+                        "type": "string"
+                    },
+                    "required": ["type", "outfile"],
+                    "additionalProperties": False
+                }
+            }
+        },
+        "type": "object",
+        "properties": {
+            "url": {"type": "string"},
+            "webdriver_options": {
+                "type": "object",
+                "additionalProperties": True
+            },
+            "steps": {
+                "type": "array",
+                "items": {
+                    "oneOf": [
+                        {"$ref": "#/$defs/identifyNode"},
+                        {"$ref": "#/$defs/varRefNode"},
+                        {"$ref": "#/$defs/clickNode"},
+                        {"$ref": "#/$defs/enterTextNode"},
+                        {"$ref": "#/$defs/docpicNode"}
+                    ]
+                }
+            }
+        }
+    }
+
+    # Validate the YAML config against the schema
+    try:
+        validate(instance=config, schema=schema)
+        return True
+    except ValidationError as e:
+        print("Invalid Yaml: " + str(e))
+        return False
+
 
 def validate_yaml_schema(config):
     schema = {
