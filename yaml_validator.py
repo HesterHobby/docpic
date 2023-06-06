@@ -61,6 +61,22 @@ def validate_yaml_schema(config):
                 "required": ["type", "target"],
                 "additionalProperties": False
             },
+            "clearNode": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "const": "clear"
+                    },
+                    "target": {
+                        "type": "object",
+                        "oneOf": [
+                            {"$ref": "#/$defs/identifyNode"},
+                            {"$ref": "#/$defs/varRefNode"}
+                        ]
+                    }
+                }
+            },
             "enterTextNode": {
                 "type": "object",
                 "properties": {
@@ -131,6 +147,7 @@ def validate_yaml_schema(config):
                         {"$ref": "#/$defs/varRefNode"},
                         {"$ref": "#/$defs/clickNode"},
                         {"$ref": "#/$defs/enterTextNode"},
+                        {"$ref": "#/$defs/clearNode"},
                         {"$ref": "#/$defs/selectNode"},
                         {"$ref": "#/$defs/docpicNode"}
                     ]

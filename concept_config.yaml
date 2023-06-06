@@ -14,6 +14,10 @@ steps:
     var: password_field
     using: css
     selector: "#password"
+  - type: clear
+    target:
+      type: var-ref
+      var-name: username
   - type: enter-text
     target:
       type: var-ref

@@ -70,6 +70,10 @@ def execute_step(step, driver: webdriver):  # Not sure what type steps is here
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         click(element)
 
+    if type == "clear":
+        element = execute_step(step.get("target"), driver) if step.get("target") else None
+        clear(element)
+
     if type == "enter-text":
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         enter_text(element, step.get("value"))
@@ -111,6 +115,10 @@ def identify(wait: WebDriverWait, using: str, selector: str, varname: str):
 
 def click(element: WebElement):
     element.click()
+
+
+def clear(element: WebElement):
+    element.clear()
 
 
 def enter_text(element: WebElement, text: str):

@@ -43,6 +43,19 @@ steps:
       var: ~
       using: link
       selector: "Samsung Galaxy Tab 10.1"
+  - type: identify
+    var: quantity
+    using: id
+    selector: "input-quantity"
+  - type: clear
+    target:
+      type: var-ref
+      var-name: quantity
+  - type: enter-text
+    target:
+      type: var-ref
+      var-name: quantity
+    value: "2"
   - type: click
     target:
       type: identify
