@@ -131,6 +131,7 @@ def validate_yaml_schema(config):
                         {"$ref": "#/$defs/varRefNode"},
                         {"$ref": "#/$defs/clickNode"},
                         {"$ref": "#/$defs/enterTextNode"},
+                        {"$ref": "#/$defs/selectNode"},
                         {"$ref": "#/$defs/docpicNode"}
                     ]
                 }

@@ -9,14 +9,34 @@ webdriver_options:
 # Define the steps that will be carried out by the script before the screenshot is taken.
 
 steps:
-  - type: identify # action type
-    var: tablets_link
-    using: link
-    selector: "Tablets"
+  - type: identify
+    var: search
+    using: name
+    selector: "search"
+  - type: enter-text
+    target:
+      type: var-ref
+      var-name: search
+    value: "samsung"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: css
+      selector: "i.fa.fa-search"
+  - type: identify
+    var: sortdropdown
+    using: id
+    selector: "input-sort"
   - type: click
     target:
       type: var-ref
-      var-name: tablets_link
+      var-name: sortdropdown
+  - type: select
+    target:
+      type: var-ref
+      var-name: sortdropdown
+    value: "Rating (Highest)"
   - type: click
     target:
       type: identify
