@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 import yaml
 
-from yaml_validator import validate_yaml_schema, validate_yaml_schema2
+from yaml_validator import validate_yaml_schema
 from webdriver_initializer import initialize_driver
 
 module_vars = {}
