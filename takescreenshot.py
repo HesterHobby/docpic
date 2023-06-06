@@ -1,9 +1,9 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, UnexpectedTagNameException
 
 import yaml
 
@@ -74,6 +74,10 @@ def execute_step(step, driver: webdriver):  # Not sure what type steps is here
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         enter_text(element, step.get("value"))
 
+    if type == "select":
+        element = execute_step(step.get("target"), driver) if step.get("target") else None
+        select(element, step.get("value"))
+
     if type == "docpic":
         outfile = step.get("outfile")
         docpic(driver, outfile)
@@ -111,6 +115,17 @@ def click(element: WebElement):
 
 def enter_text(element: WebElement, text: str):
     element.send_keys(text)
+
+
+def select(element: WebElement, labeltext: str):
+    # Is the element a dropdown?
+    try:
+        dropdown = Select(element)
+    except UnexpectedTagNameException:
+        print("The element " + element.tag_name + " is not a dropdown or has not been clicked")
+        raise
+
+    dropdown.select_by_visible_text(labeltext)
 
 
 def docpic(driver: webdriver, outfile: str):

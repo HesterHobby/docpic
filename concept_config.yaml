@@ -9,16 +9,10 @@ steps:
   - type: identify
     var: username_field
     using: css
-    in: # Note "in" has not been implemented, I'm not sure it's necessary.
-      type: var-ref
-      var-name: login_form
     selector: "#username"
   - type: identify
     var: password_field
     using: css
-    in:
-      type: var-ref
-      var-name: login_form
     selector: "#password"
   - type: enter-text
     target:
@@ -32,10 +26,24 @@ steps:
     value: "pass1"
   - type: click
     target:
-      type: identify # note nesting of the structure, I guess you could do this indefinitely if you felt like it. No doubt wants something recursive to parse.
-      var: ~ # no variable
+      type: identify
+      var: ~ # no variable has to be allowed.
       using: css
       selector: "#login_go"
+  - type: identify
+    var: mydropdown
+    using: id
+    selector: "dropdown1"
+  - type: click
+    target:
+      type: var-ref
+      var-name: mydropdown
+  - type: select
+    target:
+      type: var-ref
+      var-name: mydropdown
+    value: "option1"
+
 
 # Below the script that would generate this.
 # identify login_form using css "#login-form"

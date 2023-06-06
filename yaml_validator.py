@@ -82,6 +82,25 @@ def validate_yaml_schema(config):
                 "required": ["type", "target", "value"],
                 "additionalProperties": False
             },
+            "selectNode": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "const": "select"
+                    },
+                    "target": {
+                        "type": "object",
+                        "oneOf": [
+                            {"$ref": "#/$defs/identifyNode"},
+                            {"$ref": "#/$defs/varRefNode"}
+                        ]
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                }
+            },
             "docpicNode": {
                 "type": "object",
                 "properties": {
