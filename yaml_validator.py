@@ -126,6 +126,9 @@ def validate_yaml_schema(config):
                     },
                     "outfile": {
                         "type": "string"
+                    },
+                    "alt-text": {
+                        "type": "string"
                     }
                 },
                 "required": ["type", "outfile"],

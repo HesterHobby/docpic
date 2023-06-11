@@ -1,3 +1,6 @@
+import os
+from typing import Dict
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium import webdriver
@@ -11,21 +14,30 @@ from yaml_validator import validate_yaml_schema
 from webdriver_initializer import initialize_driver
 
 module_vars = {}
+return_vars = {}
 
 
-def take_screenshot_from_yaml(config_file):
+# This function simply exists so that I can mess about with yaml files without having to go through .md files.
+def take_screenshot_from_yaml_file(config_file: str):
+    if not os.path.isfile(config_file):
+        raise FileNotFoundError(f"File '{config_file}' does not exist.")
+    with open(config_file, 'r') as file:
+        input_yaml = file.read()
+    return input_yaml
+
+
+def take_screenshot_from_yaml(input_yaml: str, output_folder = None) -> Dict[str, str]:
     # Load the YAML configuration file
     try:
-        with open(config_file, 'r') as file:
-            config = yaml.safe_load(file)
-    except Exception:
-        print("Could not open config file " + config_file)
-        raise
+        config = yaml.safe_load(input_yaml)
+    except yaml.YAMLError as e:
+        print(f"Error parsing YAML: {e}")
+        return {}
 
     # Validate the YAML schema
     if not validate_yaml_schema(config):
         print("Invalid YAML schema.")
-        return
+        return {}
 
     # Extract the configuration values
     url = config['url']
@@ -39,52 +51,63 @@ def take_screenshot_from_yaml(config_file):
 
     if driver is None:
         print("Driver initialisation failed")
-        return
+        return {}
 
     # Visit the specified URL
     driver.get(url)
 
     # Send it off to recursive function to deal with steps.
     for step in steps:
-        execute_step(step, driver)
+        execute_step(step, driver, output_folder)
 
     driver.quit()
+    return return_vars
 
 
 # Function that deals with steps
-def execute_step(step, driver: webdriver):  # Not sure what type steps is here
+def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what type steps is here
 
     # Create WebDriverWait object outside the loop
     wait = WebDriverWait(driver, 10)
-    type = step.get("type")
+    step_type = step.get("type")
 
-    if type == "identify":
+    if step_type == "identify":
         element = identify(wait, step.get("using"), step.get("selector"), step.get("var"))
         return element
 
-    if type == "var-ref":
+    if step_type == "var-ref":
         element = get_element_from_varname(step.get("var-name"))
         return element
 
-    if type == "click":
+    if step_type == "click":
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         click(element)
 
-    if type == "clear":
+    if step_type == "clear":
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         clear(element)
 
-    if type == "enter-text":
+    if step_type == "enter-text":
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         enter_text(element, step.get("value"))
 
-    if type == "select":
+    if step_type == "select":
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         select(element, step.get("value"))
 
-    if type == "docpic":
-        outfile = step.get("outfile")
+    if step_type == "docpic":
+        outfile = step.get("outfile") # ToDo: Make outfile optional and add a default of docpic.generated.date_time.png
+        if output_folder is not None:
+            # Create the folder if it doesn't exist
+            if not os.path.exists(output_folder):
+                os.makedirs(output_folder)
+
+            outfile = os.path.join(output_folder, outfile)
+        alt_text = step.get("alt-text")
         docpic(driver, outfile)
+        return_vars["outfile"] = outfile
+        return_vars["alt_text"] = alt_text
+
 
 
 def identify(wait: WebDriverWait, using: str, selector: str, varname: str):
@@ -150,3 +173,4 @@ def get_element_from_varname(varname: str) -> WebElement:
     if element is None:
         raise KeyError("The element variable " + varname + " does not exist in the module level variables")
     return element
+

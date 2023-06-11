@@ -1,4 +1,15 @@
-# Initial URL
+# Docpic Markdown example
+
+## A proof of concept
+
+This is a simple paragraph
+
+This is another paragraph with an unordered list
+* So that I can show it is unaffected
+* Just because it looks cool
+* In order to fill the page a bit
+
+[docpic] # Initial URL
 url: 'https://tutorialsninja.com/demo/'
 
 # Webdriver options as per https://peter.sh/experiments/chromium-command-line-switches/
@@ -67,6 +78,11 @@ steps:
     using: css
     selector: "div.alert.alert-success.alert-dismissible"
   - type: docpic # docpic could be extended, I would like this to be able to focus on a particular element.
-    outfile: "test.png" # Ideally there'd be a post-processing step that can highlight elements of interest or add text or both.
+    outfile: "test2.png" # Ideally there'd be a post-processing step that can highlight elements of interest or add text or both.
     alt-text: "A test image"
+[/docpic]
+**We could add an image title, if we wanted**
 
+## Here's another section
+
+_There is some more text here._ Just because.
