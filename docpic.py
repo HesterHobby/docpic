@@ -28,7 +28,7 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     yaml_array = parse_markup(in_text)
 
     if len(yaml_array) == 0:
-        print("No docpic sections found")
+        print("No docpic sections found in document")
         return
 
     image_tags = []
