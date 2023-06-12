@@ -36,7 +36,7 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     for yaml_section in yaml_array:
         screenshot_result = take_screenshot_from_yaml(yaml_section, img_dir)
 
-        print("Adding outfile: " + screenshot_result["outfile"] +
+        print("Adding docpic: " + screenshot_result["outfile"] +
               ", with alt text: " + screenshot_result["alt_text"] + ".")
 
         image_tag = "![" + screenshot_result["alt_text"] + "](" + screenshot_result["outfile"] + ")"
