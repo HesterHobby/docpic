@@ -40,3 +40,5 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     # ToDo: Modify the input file and either overwrite or write to new file, depending on user choice.
 
 
+if __name__ == '__main__':
+    docpic()
