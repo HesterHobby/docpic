@@ -162,6 +162,8 @@ def select(element: WebElement, labeltext: str):
 def docpic(driver: webdriver, outfile: str):
     try:
         driver.save_screenshot(outfile)
+        if not os.path.exists(outfile):
+            raise Exception("Something went wrong with saving screenshot to " + outfile)
         print("Screenshot has been saved to " + outfile)
     except Exception:
         print("Error saving output file to " + outfile)

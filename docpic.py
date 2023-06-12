@@ -2,7 +2,7 @@
 import click
 import os
 
-from processmarkup import process_markup_file
+from processmarkup import parse_markup, read_file, process_markup, write_file
 from takescreenshot import take_screenshot_from_yaml
 
 
@@ -24,20 +24,32 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
         outfile = os.path.splitext(infile)[0] + ".generated.md"
 
     # Does the input file have any docpic tags?
-    yaml_array = process_markup_file(infile)
+    in_text = read_file(infile)
+    yaml_array = parse_markup(in_text)
 
     if len(yaml_array) == 0:
         print("No docpic sections found")
         return
 
+    image_tags = []
+
     for yaml_section in yaml_array:
         screenshot_result = take_screenshot_from_yaml(yaml_section, img_dir)
 
-        print("Results are: outfile: " + screenshot_result["outfile"] +
-              ", alt text: " + screenshot_result["alt_text"] + ".")
-        # Store the output in buffer - file location, alt text.
+        print("Adding outfile: " + screenshot_result["outfile"] +
+              ", with alt text: " + screenshot_result["alt_text"] + ".")
 
-    # ToDo: Modify the input file and either overwrite or write to new file, depending on user choice.
+        image_tag = "![" + screenshot_result["alt_text"] + "](" + screenshot_result["outfile"] + ")"
+
+        image_tags.append(image_tag)
+
+    section_count = len(image_tags)
+
+    # Now replace the content with the results
+    new_content = process_markup(in_text, image_tags)
+    write_file(new_content, outfile)
+
+    print("replaced " + str(section_count) + " docpic tag(s) with image tags.")
 
 
 if __name__ == '__main__':
