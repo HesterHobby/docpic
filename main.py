@@ -1,4 +1,4 @@
-from takescreenshot import take_screenshot_from_yaml, take_screenshot_from_yaml_file
+from selenium_processor import take_screenshot_from_yaml, take_screenshot_from_yaml_file
 from docpic import run_docpic
 
 # Run docpic example

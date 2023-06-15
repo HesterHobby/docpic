@@ -2,8 +2,8 @@
 import click
 import os
 
-from processmarkup import parse_markup, read_file, process_markup, write_file
-from takescreenshot import take_screenshot_from_yaml
+from markup_processor import parse_markup, read_file, process_markup, write_file
+from selenium_processor import take_screenshot_from_yaml
 
 
 @click.command()
