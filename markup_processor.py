@@ -42,4 +42,3 @@ def write_file(new_content: str, filename: str):
         # Handle the exception or log the error message
         print(f"Error occurred while writing to file: {e}")
         raise
-
