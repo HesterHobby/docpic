@@ -1,4 +1,7 @@
 # The docpic module ties everything together.
+from datetime import datetime
+from time import strftime
+
 import click
 import os
 
@@ -21,7 +24,7 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     if overwrite_existing:
         outfile = infile
     elif not outfile:
-        outfile = os.path.splitext(infile)[0] + ".generated.md"
+        outfile = os.path.splitext(infile)[0] + ".generated." + datetime.now().strftime("%Y%m%d_%H%M") + ".md"
 
     # Does the input file have any docpic tags?
     in_text = read_file(infile)
