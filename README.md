@@ -54,6 +54,7 @@ Steps in docpic can be of the following `type`:
 * `clear`: Clear the referenced element, e.g. a text box.
 * `enter-text`: Enter text in the referenced element.
 * `select`: Select text in a dropdown.
+* `wait`: Wait for a number of seconds.
 * `docpic`: Take a screenshot.
 
 ### Step type: `identify`
