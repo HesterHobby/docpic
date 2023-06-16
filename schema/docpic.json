@@ -1,0 +1,155 @@
+ {
+    "$defs": {
+        "identifyNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "identify"
+                    },
+                "var": {
+                    "anyOf": [
+                        {"type": "null"},
+                        {"type": "string"}
+                    ]
+                },
+                "using": {
+                    "type": "string",
+                    "enum": ["id", "class", "tag", "name", "link", "partial-link", "css", "xpath"]
+                },
+                "selector": {
+                    "type": "string"
+                }
+            },
+            "required": ["type", "using", "selector"],
+            "additionalProperties": false
+        },
+        "varRefNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "var-ref"
+                },
+                "var-name": {
+                    "type": "string"
+                }
+            },
+            "required": ["type", "var-name"],
+            "additionalProperties": false
+        },
+        "clickNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "click"
+                },
+                "target": {
+                    "type": "object",
+                    "oneOf": [
+                        {"$ref": "#/$defs/identifyNode"},
+                        {"$ref": "#/$defs/varRefNode"}
+                    ]
+                }
+            },
+            "required": ["type", "target"],
+            "additionalProperties": false
+        },
+        "clearNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "clear"
+                },
+                "target": {
+                    "type": "object",
+                    "oneOf": [
+                        {"$ref": "#/$defs/identifyNode"},
+                        {"$ref": "#/$defs/varRefNode"}
+                    ]
+                }
+            }
+        },
+        "enterTextNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "enter-text"
+                },
+                "target": {
+                    "type": "object",
+                    "oneOf": [
+                        {"$ref": "#/$defs/identifyNode"},
+                        {"$ref": "#/$defs/varRefNode"}
+                    ]
+                },
+                "value": {
+                    "type": "string"
+                }
+            },
+            "required": ["type", "target", "value"],
+            "additionalProperties": false
+        },
+        "selectNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "select"
+                },
+                "target": {
+                    "type": "object",
+                    "oneOf": [
+                        {"$ref": "#/$defs/identifyNode"},
+                        {"$ref": "#/$defs/varRefNode"}
+                    ]
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "docpicNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "docpic"
+                },
+                "outfile": {
+                    "type": "string"
+                },
+                "alt-text": {
+                    "type": "string"
+                }
+            },
+            "required": ["type", "outfile"],
+            "additionalProperties": false
+        }
+    },
+    "type": "object",
+    "properties": {
+        "url": {"type": "string"},
+        "webdriver_options": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "steps": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {"$ref": "#/$defs/identifyNode"},
+                    {"$ref": "#/$defs/varRefNode"},
+                    {"$ref": "#/$defs/clickNode"},
+                    {"$ref": "#/$defs/enterTextNode"},
+                    {"$ref": "#/$defs/clearNode"},
+                    {"$ref": "#/$defs/selectNode"},
+                    {"$ref": "#/$defs/docpicNode"}
+                ]
+            }
+        }
+    }
+}
