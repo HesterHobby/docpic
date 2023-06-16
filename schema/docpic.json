@@ -112,6 +112,19 @@
                 }
             }
         },
+        "waitNode": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "wait"
+                },
+                "value": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
         "docpicNode": {
             "type": "object",
             "properties": {

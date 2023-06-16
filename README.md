@@ -80,6 +80,10 @@ These action steps all follow a similar format.
 * `target`: Required. The element receiving the action. This is either a `var-ref` step, or a `identify` step.
 * `value`: For `enter-text` and `select` nodes only, the string being entered or selected, respectively. 
 
+### Step type: `wait`
+Docpic takes care of waiting for elements to be available, but sometimes it is necessary to build in a hard
+wait for other reasons. `wait` has one property, `value`, which takes the wait time in seconds.
+
 ### Step type: `docpic`
 The docpic step has the following properties:
 * `outfile`: Required. The path of the output image.

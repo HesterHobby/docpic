@@ -95,6 +95,9 @@ def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what 
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         select(element, step.get("value"))
 
+    if step_type == "wait":
+        wait(driver, step.get("value"))
+
     if step_type == "docpic":
         outfile = step.get("outfile") # ToDo: Make outfile optional and add a default of docpic.generated.date_time.png
         if output_folder is not None:
@@ -158,6 +161,8 @@ def select(element: WebElement, labeltext: str):
 
     dropdown.select_by_visible_text(labeltext)
 
+def wait(driver: webdriver, seconds: int):
+    driver.sleep(seconds)
 
 def docpic(driver: webdriver, outfile: str):
     try:
