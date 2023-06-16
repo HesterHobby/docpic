@@ -24,7 +24,16 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     if overwrite_existing:
         outfile = infile
     elif not outfile:
-        outfile = os.path.splitext(infile)[0] + ".generated." + datetime.now().strftime("%Y%m%d_%H%M") + ".md"
+        # Convert the input file path to the platform-specific format
+        infile = os.path.normpath(infile)
+
+        # Extract the folder names from the input file path
+        folders = infile.split(os.path.sep)
+        output_folder_path = os.path.join("out", *folders[1:-1])
+
+        # Generate the output file path
+        outfile = os.path.join(output_folder_path, folders[-1])
+        outfile = os.path.splitext(outfile)[0] + ".generated." + datetime.now().strftime("%Y%m%d_%H%M") + ".md"
 
     # Does the input file have any docpic tags?
     in_text = read_file(infile)
@@ -52,7 +61,8 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     new_content = process_markup(in_text, image_tags)
     write_file(new_content, outfile)
 
-    print("replaced " + str(section_count) + " docpic tag(s) with image tags.")
+    print("Replaced " + str(section_count) + " docpic tag(s) with image tags.")
+    print("Output is in " + outfile)
 
 
 if __name__ == '__main__':

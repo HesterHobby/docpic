@@ -39,10 +39,10 @@ docpic can be run in two ways:
   For example, the following will run docpic on the included example yaml file and
     save the output into a folder called "assets": 
  
-  `python docpic.py --infile concept_md_config.md --img-dir assets/`.
+  `python docpic.py --infile yaml_and_markup/concept_md_config.md --img-dir assets/`.
 
   If no output name is specified and the optional `--overwrite-existing` flag is not set, like in this example, the output 
-    markdown file will be saved in the format `[input_name].generated.[YYMMDD_hhmm].md` using the system date.
+    markdown file will be saved in the format `out/[input_name].generated.[YYMMDD_hhmm].md` using the system date.
 
 ## YAML structure
 
