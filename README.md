@@ -4,22 +4,28 @@ A selenium framework for adding screenshots to documentation.
 
 ## What is it?
 
-docpic is a lightweight markdown processor for adding screenshots of web apps to your markdown documentation.
+docpic is a lightweight Markdown processor for adding screenshots of web apps to your markdown documentation.
 
 ## Why do I want it?
 
 If you are maintaining markdown documentation alongside your web app, docpic will ensure the screenshots 
-of different parts or states of the app are up to date, 
+of different parts or states of the app are up-to-date, 
 removing the overhead of having to manually update screenshots for every change in your app.  
+
+## But I could just write my own Selenium?
+
+You could. But, being a wrapper with a very simple config structure, docpic takes all the pain out of it. 
+Do you really need to worry about where your webdriver is coming from or how you get to the selection in a 
+dropdown? Plus, it takes care of all the error handling for you. It's a time saver.
 
 ## How does it work?
 
 docpic uses simple YAML configuration to drive a series of selenium steps to get the web app into the 
 desired state, and then takes a screenshot that is saved to a location specified in the config.
-The config is added between [docpic]..[/docpic] tags in your markdown documents. 
+The config is added between [docpic]...[/docpic] tags in your markdown documents. 
 
 After the screenshot is taken, docpic either saves a changed markdown file with the image embedded to a 
-new location, or overwrites the existing YAML section with a markdown link to the image.
+new location, or overwrites the existing YAML section with a Markdown link to the image.
 
 ## How do I call it?
 
@@ -33,9 +39,54 @@ markdown file will be saved in the format `[input_name].generated.[YYMMDD_hhmm].
 
 ## YAML structure
 
-WIP, trying to make this look nice / useful. The raw schema is in `yaml_validator.py`. 
+The raw schema for docpic is in `schema/docpic.json`. An example working schema is in `script_config.dp.yaml`. 
+
+In its most basic form, the config for docpic looks as follows:
+* `url`: The initial URL that webdriver should open
+* `webdriver_options`: Any webdriver options that you would like to add. This will accept anything from 
+https://peter.sh/experiments/chromium-command-line-switches/
+* `steps`: An array of steps that webdriver will follow.
+
+Steps in docpic can be of the following `type`:
+* `identify`: Identifies an element, and optionally stores it to variable.
+* `var-ref`: Refers to a previously stored element variable, which can then be used for other actions.
+* `click`: Click on the referenced element.
+* `clear`: Clear the referenced element, e.g. a text box.
+* `enter-text`: Enter text in the referenced element.
+* `select`: Select text in a dropdown.
+* `docpic`: Take a screenshot.
+
+### Step type: `identify`
+The `identify` step has various options for obtaining the element, and what to do with it next.
+* `var`: Optional. The variable name that this element will be stored in.
+* `using`: Required. The selector (`By` in Selenium terms) that will be used. Any of:
+  * `id`: The element id.
+  * `class`: The element class name.
+  * `tag`: The element tag.
+  * `name`: The element name.
+  * `link`: The element link text.
+  * `partial-link`: The element partial link text.
+  * `css`: The element CSS.
+  * `xpath`: XPATH reference to the element.
+* `selector`: Required. The value of the selector set in `using`, e.g. the id, the name or the CSS 
+reference of the element.
+
+### Step type: `var-ref`
+The `var-ref` step simply passes a variable to the calling step. It's only additional property is `var-name`, 
+which is the name of the variable being passed.
+
+### Step types: `click`, `enter-text`, `clear`, `select`
+These action steps all follow a similar format.
+* `target`: Required. The element receiving the action. This is either a `var-ref` step, or a `identify` step.
+* `value`: For `enter-text` and `select` nodes only, the string being entered or selected, respectively. 
+
+### Step type: `docpic`
+The docpic step has the following properties:
+* `outfile`: Required. The path of the output image.
+* `alt-text`: Optional. The alternative text for the image. Use of this is strongly encouraged for accessibility.
 
 ## Command line options
+When running docpic from the command line, the following options are available:
 * `--infile`: Required. The location of your infile, relative to the current folder.
 * `--outfile`: Optional. Output file, relative to the current folder. If not specified, 
 `[input_name].generated.[YYMMDD_hhmm].md` will be used.
