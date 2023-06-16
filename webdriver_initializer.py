@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.common import WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -20,7 +21,8 @@ def initialize_driver(webdriver_options):
         # options.add_argument("--window-size=1200x800")
 
         # Initialize the webdriver with the configured options
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        service = Service(executable_path=ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
         return driver
     except WebDriverException as e:
         print("Failed to initialize webdriver:", e)
