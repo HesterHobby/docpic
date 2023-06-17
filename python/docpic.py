@@ -1,6 +1,5 @@
 # The docpic module ties everything together.
 from datetime import datetime
-from time import strftime
 
 import click
 import os

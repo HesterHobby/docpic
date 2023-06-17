@@ -15,7 +15,7 @@ url: 'https://tutorialsninja.com/demo/'
 # Webdriver options as per https://peter.sh/experiments/chromium-command-line-switches/
 webdriver_options:
   headless: false
-  window-size: "1280,900"
+  window-size: "1280,1200"
 
 # Define the steps that will be carried out by the script before the screenshot is taken.
 
