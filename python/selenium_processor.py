@@ -26,7 +26,7 @@ def take_screenshot_from_yaml_file(config_file: str):
     return input_yaml
 
 
-def take_screenshot_from_yaml(input_yaml: str, output_folder = None) -> Dict[str, str]:
+def take_screenshot_from_yaml(input_yaml: str, output_folder: str = None) -> Dict[str, str]:
     # Load the YAML configuration file
     try:
         config = yaml.safe_load(input_yaml)
@@ -96,21 +96,22 @@ def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what 
         select(element, step.get("value"))
 
     if step_type == "wait":
-        wait(driver, step.get("value"))
+        driver_wait(driver, step.get("value"))
 
     if step_type == "docpic":
-        outfile = step.get("outfile") # ToDo: Make outfile optional and add a default of docpic.generated.date_time.png
+        outfile = step.get("outfile")
+        full_outfile = outfile
         if output_folder is not None:
             # Create the folder if it doesn't exist
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
 
-            outfile = os.path.join(output_folder, outfile)
+            full_outfile = os.path.join(output_folder, outfile)
+
         alt_text = step.get("alt-text")
-        docpic(driver, outfile)
+        docpic(driver, full_outfile)
         return_vars["outfile"] = outfile
         return_vars["alt_text"] = alt_text
-
 
 
 def identify(wait: WebDriverWait, using: str, selector: str, varname: str):
@@ -161,8 +162,10 @@ def select(element: WebElement, labeltext: str):
 
     dropdown.select_by_visible_text(labeltext)
 
-def wait(driver: webdriver, seconds: int):
+
+def driver_wait(driver: webdriver, seconds: int):
     driver.sleep(seconds)
+
 
 def docpic(driver: webdriver, outfile: str):
     try:
@@ -180,4 +183,3 @@ def get_element_from_varname(varname: str) -> WebElement:
     if element is None:
         raise KeyError("The element variable " + varname + " does not exist in the module level variables")
     return element
-
