@@ -1,7 +1,7 @@
 import os
 
-from python.docpic import run_docpic
-from python.selenium_processor import take_screenshot_from_yaml_file
+from docpic_py.docpic import run_docpic
+from docpic_py.selenium_processor import take_screenshot_from_yaml_file
 
 # Run docpic example
 if __name__ == '__main__':
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # run_docpic("../yaml_and_markup/example_md_config.md", "out/test.md")
 
     # Run from md, specify input only:
-    #run_docpic("../yaml_and_markup/example_md_config.md")
+    # run_docpic("../yaml_and_markup/example_md_config.md")
 
     # Run from md, overwrite existing (copy md first):
     # run_docpic("yaml_and_markup/example_md_config_copy.md", overwrite_existing=True)
