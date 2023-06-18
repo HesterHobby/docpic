@@ -11,14 +11,14 @@ from selenium.common.exceptions import NoSuchElementException, UnexpectedTagName
 
 import yaml
 
-from yaml_validator import validate_yaml_schema
-from webdriver_initializer import initialize_driver
+from .yaml_validator import validate_yaml_schema
+from .webdriver_initializer import initialize_driver
 
 module_vars = {}
 return_vars = {}
 
 
-# This function simply exists so that I can mess about with yaml files without having to go through .md files.
+# This function simply exists to allow the user to write yaml and check the correct screenshots are being taken.
 def take_screenshot_from_yaml_file(config_file: str, output_folder: str = None):
     if not os.path.isfile(config_file):
         raise FileNotFoundError(f"File '{config_file}' does not exist.")

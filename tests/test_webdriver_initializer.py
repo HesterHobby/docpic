@@ -6,37 +6,37 @@ import pytest
 
 from python.webdriver_initializer import initialize_driver
 
-
+@pytest.mark.slow
 def test_initialize_driver_headless_enabled():
     webdriver_options = {'headless': True}
     driver = initialize_driver(webdriver_options)
     assert isinstance(driver, webdriver.Chrome)
-    assert driver.options.headless
+    assert '--headless' in driver.options.arguments
     driver.quit()
 
-
+@pytest.mark.slow
 def test_initialize_driver_headless_disabled():
     webdriver_options = {'headless': False}
     driver = initialize_driver(webdriver_options)
     assert isinstance(driver, webdriver.Chrome)
-    assert not driver.options.headless
+    assert not '--headless' in driver.options.arguments
     driver.quit()
 
-
+@pytest.mark.slow
 def test_initialize_driver_with_additional_options():
     webdriver_options = {'headless': True, 'window-size': '1200x800'}
     driver = initialize_driver(webdriver_options)
     assert isinstance(driver, webdriver.Chrome)
-    assert driver.options.headless
+    assert '--headless' in driver.options.arguments
     assert '--window-size=1200x800' in driver.options.arguments
     driver.quit()
 
-
+@pytest.mark.slow
 def test_initialize_driver_with_invalid_options():
     webdriver_options = {'headless': True, 'invalid-option': 'value'}
     driver = initialize_driver(webdriver_options)
     assert isinstance(driver, webdriver.Chrome)
-    assert driver.options.headless
+    assert '--headless' in driver.options.arguments
     driver.quit()
 
 def test_initialize_driver_with_webdriver_exception(mocker):
