@@ -78,7 +78,7 @@ steps:
     using: css
     selector: "div.alert.alert-success.alert-dismissible"
   - type: docpic # docpic could be extended, I would like this to be able to focus on a particular element.
-    outfile: "test.png" # Ideally there'd be a post-processing step that can highlight elements of interest or add text or both.
+    outfile: "test.png" # Ideally there would be a post-processing step that can highlight elements of interest or add text or both.
     alt-text: "A test image"
 [/docpic]
 **We could add an image title, if we wanted**

@@ -106,7 +106,7 @@ def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what 
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
 
-            full_outfile = os.path.join(output_folder, outfile)
+            full_outfile = os.path.join(os.path.normpath(output_folder), outfile)
 
         alt_text = step.get("alt-text")
         docpic(driver, full_outfile)

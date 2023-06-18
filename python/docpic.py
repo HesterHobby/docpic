@@ -9,8 +9,8 @@ from selenium_processor import take_screenshot_from_yaml
 
 
 @click.command()
-@click.option("--infile", help="The location of your infile, relative to the current folder.")
-@click.option("--outfile", help="Output file, relative to the current folder.")
+@click.option("--infile", help="The location of your infile, relative to the current working directory.")
+@click.option("--outfile", help="Output file, relative to the current working directory.")
 @click.option("--img-dir", default="assets", help="Output folder, relative to the output folder. Defaults to 'assets'.")
 @click.option("--overwrite-existing", is_flag=True, help="When specified, this overwrites the [docpic]..[/docpic] "
                                                          "sections in your input file.")
@@ -55,7 +55,10 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
         print("Adding docpic: " + screenshot_result["outfile"].replace("\\", "/") +
               ", with alt text: " + screenshot_result["alt_text"] + ".")
 
-        image_tag = "![" + screenshot_result["alt_text"] + "](" + img_dir + "/" + screenshot_result["outfile"].\
+        if not img_dir.endswith("/"):
+            img_dir = img_dir + "/"
+
+        image_tag = "![" + screenshot_result["alt_text"] + "](" + img_dir + screenshot_result["outfile"].\
             replace("\\", "/") + ")"
 
         image_tags.append(image_tag)

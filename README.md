@@ -30,7 +30,8 @@ new location, or overwrites the existing YAML section with a Markdown link to th
 ## How do I call it?
 
 docpic can be run in two ways:
-* From within the IDE it can be run through `main.py`. An example is set up that should run on all platforms.
+* From within the IDE it can be run through `main.py` in the `python` folder. An example is set up that 
+should run on all platforms.
 * From the command line docpic can be run using 
 
   `python docpic.py --infile [input_file] --outfile [output_file] 
@@ -39,14 +40,14 @@ docpic can be run in two ways:
   For example, the following will run docpic on the included example yaml file and
     save the output into a folder called "assets": 
  
-  `python docpic.py --infile yaml_and_markup/concept_md_config.md --img-dir assets/`.
+  `python python/docpic.py --infile yaml_and_markup/example_md_config.md --img-dir assets/`.
 
   If no output name is specified and the optional `--overwrite-existing` flag is not set, like in this example, the output 
     markdown file will be saved in the format `out/[input_name].generated.[YYMMDD_hhmm].md` using the system date.
 
 ## YAML structure
 
-The raw schema for docpic is in `schema/docpic.json`. An example working schema is in `script_config.dp.yaml`. 
+The raw schema for docpic is in `schema/docpic.json`. An example working schema is in `example_config.dp.yaml`. 
 
 In its most basic form, the config for docpic looks as follows:
 * `url`: The initial URL that webdriver should open
@@ -99,9 +100,9 @@ The docpic step has the following properties:
 
 ## Command line options
 When running docpic from the command line, the following options are available:
-* `--infile`: Required. The location of your infile, relative to the current folder.
-* `--outfile`: Optional. Output file, relative to the current folder. If not specified, 
+* `--infile`: Required. The location of your infile, relative to the current working directory.
+* `--outfile`: Optional. Output file, relative to the current working directory. If not specified, 
 `[input_name].generated.[YYMMDD_hhmm].md` will be used.
-* `--img-dir`: Optional. Output folder, relative to the current folder. Defaults to `assets`.
+* `--img-dir`: Optional. Output folder, relative to the output folder. Defaults to `assets`.
 * `--overwrite-existing`: Optional flag. When specified, this overwrites the `[docpic]..[/docpic]` 
 sections in your input file.
