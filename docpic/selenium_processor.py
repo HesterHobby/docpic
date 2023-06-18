@@ -11,8 +11,8 @@ from selenium.common.exceptions import NoSuchElementException, UnexpectedTagName
 
 import yaml
 
-from .yaml_validator import validate_yaml_schema
-from .webdriver_initializer import initialize_driver
+from docpic.yaml_validator import validate_yaml_schema
+from docpic.webdriver_initializer import initialize_driver
 
 module_vars = {}
 return_vars = {}

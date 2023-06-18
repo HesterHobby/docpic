@@ -1,7 +1,7 @@
 import os
 
-from python.docpic import run_docpic
-from python.selenium_processor import take_screenshot_from_yaml_file
+from docpic.docpic import run_docpic
+from docpic.selenium_processor import take_screenshot_from_yaml_file
 
 # Run docpic example
 if __name__ == '__main__':

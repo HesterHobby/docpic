@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import pytest
 
-from python.webdriver_initializer import initialize_driver
+from docpic.webdriver_initializer import initialize_driver
 
 @pytest.mark.slow
 def test_initialize_driver_headless_enabled():
