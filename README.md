@@ -30,17 +30,17 @@ new location, or overwrites the existing YAML section with a Markdown link to th
 ## How do I call it?
 
 docpic can be run in two ways:
-* From within the IDE it can be run through `main.py` in the `python` folder. An example is set up that 
+* From within the IDE it can be run through `main.py` in the `docpic_py` folder. An example is set up that 
 should run on all platforms.
 * From the command line docpic can be run using 
 
-  `python docpic.py --infile [input_file] --outfile [output_file] 
+  `python docpic_py/docpic.py --infile [input_file] --outfile [output_file] 
     --img-dir [output_folder]`. 
 
   For example, the following will run docpic on the included example yaml file and
     save the output into a folder called "assets": 
  
-  `python python/docpic.py --infile yaml_and_markup/example_md_config.md --img-dir assets/`.
+  `python docpic_py/docpic.py --infile yaml_and_markup/example_md_config.md --img-dir assets/`.
 
   If no output name is specified and the optional `--overwrite-existing` flag is not set, like in this example, the output 
     markdown file will be saved in the format `out/[input_name].generated.[YYMMDD_hhmm].md` using the system date.
