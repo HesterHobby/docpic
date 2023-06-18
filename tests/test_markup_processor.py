@@ -11,7 +11,8 @@ def test_parse_markup_with_single_section():
 
 
 def test_parse_markup_with_multiple_sections():
-    markdown_text = "[docpic]\n## Section 1\n\nThis is the first section.\n[/docpic][docpic]\n## Section 2\n\nThis is the second section.\n[/docpic][docpic]\n## Section 3\n\nThis is the third section.\n[/docpic]"
+    markdown_text = "[docpic]\n## Section 1\n\nThis is the first section.\n[/docpic][docpic]\n## Section 2\n\nThis is " \
+                    "the second section.\n[/docpic][docpic]\n## Section 3\n\nThis is the third section.\n[/docpic]"
     result = parse_markup(markdown_text)
     assert len(result) == 3
     assert result[0] == "\n## Section 1\n\nThis is the first section.\n"
@@ -32,7 +33,7 @@ def test_read_existing_file(tmp_path):
     test_file.write_text(content)
 
     # Test reading an existing file
-    result = read_file(test_file)
+    result = read_file(str(test_file))
     assert result == content
 
 
@@ -92,12 +93,10 @@ def test_write_file(tmp_path):
 
 
 def test_write_file_exception(tmp_path):
-    # Create a temporary file
-    test_file = tmp_path / "test_file.txt"
-
     # Specify a non-existent directory path
     non_existent_dir = tmp_path / "non_existent"
 
     # Ensure an exception is raised
     with pytest.raises(Exception) as exc_info:
         write_file("Content", str(non_existent_dir / "test_file.txt"))
+        assert "No such file or directory" in exc_info

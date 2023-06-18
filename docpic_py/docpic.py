@@ -4,8 +4,8 @@ from datetime import datetime
 import click
 import os
 
-from markup_processor import parse_markup, read_file, process_markup, write_file
-from selenium_processor import take_screenshot_from_yaml
+from docpic_py.markup_processor import parse_markup, read_file, process_markup, write_file
+from docpic_py.selenium_processor import take_screenshot_from_yaml
 
 
 @click.command()
@@ -44,7 +44,7 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     yaml_array = parse_markup(in_text)
 
     if len(yaml_array) == 0:
-        print("No docpic sections found in document")
+        print("\nNo docpic sections found in document")
         return
 
     image_tags = []
@@ -52,7 +52,7 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     for yaml_section in yaml_array:
         screenshot_result = take_screenshot_from_yaml(yaml_section, docpic_img_dir)
 
-        print("Adding docpic: " + screenshot_result["outfile"].replace("\\", "/") +
+        print("\nAdding docpic: " + screenshot_result["outfile"].replace("\\", "/") +
               ", with alt text: " + screenshot_result["alt_text"] + ".")
 
         if not img_dir.endswith("/"):
@@ -69,8 +69,8 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     new_content = process_markup(in_text, image_tags)
     write_file(new_content, outfile)
 
-    print("Replaced " + str(section_count) + " docpic tag(s) with image tags.")
-    print("Output is in " + outfile)
+    print("\nReplaced " + str(section_count) + " docpic tag(s) with image tags.")
+    print("\nOutput is in " + outfile)
 
 
 if __name__ == '__main__':

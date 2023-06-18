@@ -11,8 +11,8 @@ from selenium.common.exceptions import NoSuchElementException, UnexpectedTagName
 
 import yaml
 
-from yaml_validator import validate_yaml_schema
-from webdriver_initializer import initialize_driver
+from docpic_py.yaml_validator import validate_yaml_schema
+from docpic_py.webdriver_initializer import initialize_driver
 
 module_vars = {}
 return_vars = {}
@@ -21,7 +21,7 @@ return_vars = {}
 # This function simply exists to allow the user to write yaml and check the correct screenshots are being taken.
 def take_screenshot_from_yaml_file(config_file: str, output_folder: str = None):
     if not os.path.isfile(config_file):
-        raise FileNotFoundError(f"File '{config_file}' does not exist.")
+        raise FileNotFoundError(f"\nFile '{config_file}' does not exist.")
     with open(config_file, 'r') as file:
         input_yaml = file.read()
     take_screenshot_from_yaml(input_yaml, output_folder)
@@ -32,12 +32,12 @@ def take_screenshot_from_yaml(input_yaml: str, output_folder: str = None) -> Dic
     try:
         config = yaml.safe_load(input_yaml)
     except yaml.YAMLError as e:
-        print(f"Error parsing YAML: {e}")
+        print(f"\nError parsing YAML: {e}")
         return {}
 
     # Validate the YAML schema
     if not validate_yaml_schema(config):
-        print("Invalid YAML schema.")
+        print("\nInvalid YAML schema.")
         return {}
 
     # Extract the configuration values
@@ -51,7 +51,7 @@ def take_screenshot_from_yaml(input_yaml: str, output_folder: str = None) -> Dic
     driver = initialize_driver(options)
 
     if driver is None:
-        print("Driver initialisation failed")
+        print("\nDriver initialisation failed")
         return {}
 
     # Visit the specified URL
@@ -133,7 +133,7 @@ def identify(wait: WebDriverWait, using: str, selector: str, varname: str):
     try:
         element = wait.until(EC.visibility_of_element_located((locator_type, selector)))
     except NoSuchElementException:
-        print("The element" + selector + " was not found on this page")
+        print(f"\nThe element {selector} was not found on this page")
         raise
 
     if varname is not None:
@@ -158,7 +158,7 @@ def select(element: WebElement, labeltext: str):
     try:
         dropdown = Select(element)
     except UnexpectedTagNameException:
-        print("The element " + element.tag_name + " is not a dropdown or has not been clicked")
+        print(f"\nThe element {element.tag_name} is not a dropdown or has not been clicked")
         raise
 
     dropdown.select_by_visible_text(labeltext)
@@ -172,15 +172,15 @@ def docpic(driver: webdriver, outfile: str):
     try:
         driver.save_screenshot(outfile)
         if not os.path.exists(outfile):
-            raise Exception("Something went wrong with saving screenshot to " + outfile)
-        print("Screenshot has been saved to " + outfile)
+            raise Exception(f"\nSomething went wrong with saving screenshot to {outfile}")
+        print(f"\nScreenshot has been saved to {outfile}")
     except Exception:
-        print("Error saving output file to " + outfile)
+        print(f"\nError saving output file to {outfile}")
         raise
 
 
 def get_element_from_varname(varname: str) -> WebElement:
     element = module_vars.get(varname)
     if element is None:
-        raise KeyError("The element variable " + varname + " does not exist in the module level variables")
+        raise KeyError(f"\nThe element variable {varname} does not exist in the module level variables")
     return element

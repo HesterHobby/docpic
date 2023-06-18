@@ -11,7 +11,7 @@ if __name__ == '__main__':
     if testpath in path:  # We need to run from the root folder.
         os.chdir("/")
 
-    print("working directory is " + os.getcwd())
+    print(f"\nworking directory is {os.getcwd()}")
     # Uncomment the relevant section(s) to run.
 
     # Run from yaml:

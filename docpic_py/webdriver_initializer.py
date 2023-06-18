@@ -6,11 +6,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 def initialize_driver(webdriver_options):
     options = webdriver.ChromeOptions()
-    #options.headless = False
 
-    #  DeprecationWarning: headless property is deprecated, instead use add_argument('--headless') or add_argument('--headless=new')
     if 'headless' in webdriver_options and webdriver_options['headless']:
-        #options.headless = True
         options.add_argument('--headless')
 
     if webdriver_options is not None:
@@ -28,5 +25,5 @@ def initialize_driver(webdriver_options):
         driver = webdriver.Chrome(service=service, options=options)
         return driver
     except WebDriverException as e:
-        print("Failed to initialize webdriver:", e)
+        print("\nFailed to initialize webdriver:", e)
         return None
