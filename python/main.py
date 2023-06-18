@@ -1,6 +1,7 @@
 import os
 
 from python.docpic import run_docpic
+from python.selenium_processor import take_screenshot_from_yaml_file
 
 # Run docpic example
 if __name__ == '__main__':
@@ -14,7 +15,7 @@ if __name__ == '__main__':
     # Uncomment the relevant section(s) to run.
 
     # Run from yaml:
-    # take_screenshot_from_yaml_file("example_config.dp.yaml")
+    # take_screenshot_from_yaml_file("yaml_and_markup/example_config.dp.yaml")
 
     # Run from md, specify outfile and image folder:
     # run_docpic("yaml_and_markup/example_md_config.md", "out/test.md", "img")

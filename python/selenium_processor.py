@@ -1,4 +1,5 @@
 import os
+import time
 from typing import Dict
 
 from selenium.webdriver.common.by import By
@@ -18,12 +19,12 @@ return_vars = {}
 
 
 # This function simply exists so that I can mess about with yaml files without having to go through .md files.
-def take_screenshot_from_yaml_file(config_file: str):
+def take_screenshot_from_yaml_file(config_file: str, output_folder: str = None):
     if not os.path.isfile(config_file):
         raise FileNotFoundError(f"File '{config_file}' does not exist.")
     with open(config_file, 'r') as file:
         input_yaml = file.read()
-    return input_yaml
+    take_screenshot_from_yaml(input_yaml, output_folder)
 
 
 def take_screenshot_from_yaml(input_yaml: str, output_folder: str = None) -> Dict[str, str]:
@@ -96,7 +97,7 @@ def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what 
         select(element, step.get("value"))
 
     if step_type == "wait":
-        driver_wait(driver, step.get("value"))
+        driver_wait(step.get("value"))
 
     if step_type == "docpic":
         outfile = step.get("outfile")
@@ -163,8 +164,8 @@ def select(element: WebElement, labeltext: str):
     dropdown.select_by_visible_text(labeltext)
 
 
-def driver_wait(driver: webdriver, seconds: int):
-    driver.sleep(seconds)
+def driver_wait(seconds: int):
+    time.sleep(seconds)
 
 
 def docpic(driver: webdriver, outfile: str):

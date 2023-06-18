@@ -160,6 +160,7 @@
                     {"$ref": "#/$defs/enterTextNode"},
                     {"$ref": "#/$defs/clearNode"},
                     {"$ref": "#/$defs/selectNode"},
+                    {"$ref": "#/$defs/waitNode"},
                     {"$ref": "#/$defs/docpicNode"}
                 ]
             }
