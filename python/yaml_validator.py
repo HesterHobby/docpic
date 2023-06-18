@@ -4,7 +4,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 def validate_yaml_schema(config):
-    with open("schema/docpic.json", "r") as file:
+    with open("../schema/docpic.json", "r") as file:
         schema = json.load(file)
 
 

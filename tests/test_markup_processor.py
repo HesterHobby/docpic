@@ -1,6 +1,6 @@
 import pytest
 
-from docpic.markup_processor import parse_markup, read_file, process_markup, write_file
+from python.markup_processor import parse_markup, read_file, process_markup, write_file
 
 
 def test_parse_markup_with_single_section():
