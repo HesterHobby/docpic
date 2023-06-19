@@ -4,8 +4,13 @@ import sys
 import pytest
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
-from docpic_py.selenium_processor import get_element_from_varname, docpic
+from docpic_py.selenium_processor import get_element_from_varname, docpic, select
 from unittest.mock import patch
+
+from pytest_mock import MockFixture
+from selenium.common.exceptions import UnexpectedTagNameException
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 
 # Add the project root directory to the Python module search path
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -79,3 +84,32 @@ def test_docpic_raises_exception_if_file_not_created(tmp_path):
         docpic(driver_mock, str(outfile))
 
     assert "Something went wrong with saving screenshot to" in str(excinfo.value)
+
+
+def test_select_with_dropdown_element(mocker: MockFixture):
+    # Arrange
+    element = mocker.Mock(spec=WebElement)
+    element.tag_name = 'select'
+    labeltext = 'Option 1'
+    select_mock = mocker.Mock(spec=Select)
+    select_mock.select_by_visible_text.return_value = None
+    mocker.patch('docpic_py.selenium_processor.Select', return_value=select_mock)
+
+    # Act
+    select(element, labeltext)
+
+    # Assert
+    select_mock.select_by_visible_text.assert_called_once_with(labeltext)
+
+
+def test_select_with_non_dropdown_element(mocker):
+    # Arrange
+    element = mocker.Mock(spec=WebElement)
+    element.tag_name = 'input'
+    labeltext = 'Option 1'
+
+    # Act/Assert
+    with pytest.raises(UnexpectedTagNameException) as exc_info:
+        select(element, labeltext)
+        # Assert exception message or any other details, if necessary
+        assert str(exc_info.value) == f"\nThe element {element.tag_name} is not a dropdown or has not been clicked"
