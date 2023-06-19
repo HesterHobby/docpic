@@ -2,15 +2,20 @@ import os
 import sys
 
 import pytest
+from unittest.mock import patch
+from pytest_mock import MockFixture
+
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
-from docpic_py.selenium_processor import get_element_from_varname, docpic, select
-from unittest.mock import patch
-
-from pytest_mock import MockFixture
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import UnexpectedTagNameException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.wait import WebDriverWait
+
+from docpic_py.selenium_processor import get_element_from_varname, docpic, select, identify
+
 
 # Add the project root directory to the Python module search path
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -80,10 +85,10 @@ def test_docpic_raises_exception_if_file_not_created(tmp_path):
     driver_mock = webdriver.Chrome()
 
     # Act and Assert
-    with pytest.raises(Exception) as excinfo:
+    with pytest.raises(Exception) as exc_info:
         docpic(driver_mock, str(outfile))
 
-    assert "Something went wrong with saving screenshot to" in str(excinfo.value)
+    assert "Something went wrong with saving screenshot to" in str(exc_info.value)
 
 
 def test_select_with_dropdown_element(mocker: MockFixture):
