@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import UnexpectedTagNameException
+from selenium.common.exceptions import UnexpectedTagNameException, NoSuchElementException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
@@ -118,3 +118,46 @@ def test_select_with_non_dropdown_element(mocker):
         select(element, labeltext)
         # Assert exception message or any other details, if necessary
         assert str(exc_info.value) == f"\nThe element {element.tag_name} is not a dropdown or has not been clicked"
+
+
+@pytest.mark.parametrize('varname', [None, 'element1'])
+def test_identify_finds_element(mocker, varname):
+    # Arrange
+    wait_mock = mocker.Mock(spec=WebDriverWait)
+    element_mock = mocker.Mock(spec=WebElement)
+    selector = 'myElement'
+
+    wait_mock.until.return_value = element_mock
+
+    # Act
+    module_vars = {}
+
+    with patch("docpic_py.selenium_processor.module_vars", module_vars):
+        result = identify(wait_mock, 'id', selector, varname)
+
+        # Assert
+        assert result == element_mock
+
+        if varname is not None:
+            assert module_vars[varname] == element_mock
+
+
+@pytest.mark.parametrize('varname', [None, 'element1'])
+def test_identify__does_not_find_element(mocker, varname):
+    # Arrange
+    wait_mock = mocker.Mock(spec=WebDriverWait)
+    selector = 'myElement'
+
+    # Mock the behavior when NoSuchElementException is raised
+    wait_mock.until.side_effect = NoSuchElementException()
+
+    # Act
+    module_vars = {}
+
+    with patch("docpic_py.selenium_processor.module_vars", module_vars):
+        # Assert
+        with pytest.raises(NoSuchElementException):
+            identify(wait_mock, 'id', selector, varname)
+
+        # Verify that module_vars is not modified when identification fails
+        assert varname not in module_vars
