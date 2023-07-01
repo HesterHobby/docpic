@@ -1,5 +1,6 @@
 # The docpic module ties everything together.
 from datetime import datetime
+from typing import List
 
 import click
 import os
@@ -24,20 +25,37 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
         outfile = infile
 
     if not outfile:
-        # Convert the input file path to the platform-specific format
-        infile = os.path.normpath(infile)
-
-        # Extract the folder names from the input file path
-        folders = infile.split(os.path.sep)
-        output_folder_path = os.path.join("out", *folders[1:-1])
-
-        # Generate the output file path
-        outfile = os.path.join(output_folder_path, folders[-1])
-        outfile = os.path.splitext(outfile)[0] + ".generated." + datetime.now().strftime("%Y%m%d_%H%M") + ".md"
+        outfile = generate_output_file_path(infile)
     else:
         output_folder_path = os.path.dirname(outfile)
 
-    docpic_img_dir = os.path.join(output_folder_path, img_dir)
+    image_tags = process_docpic_tags(infile, outfile, img_dir)
+
+    # Now replace the content with the results
+    in_text = read_file(infile)
+    new_content = process_markup(in_text, image_tags)
+    write_file(new_content, outfile)
+
+    print("\nOutput is in " + outfile)
+
+
+def generate_output_file_path(infile: str) -> str:
+    # Convert the input file path to the platform-specific format
+    infile = os.path.normpath(infile)
+
+    # Extract the folder names from the input file path
+    folders = infile.split(os.path.sep)
+    output_folder_path = os.path.join("out", *folders[1:-1])
+
+    # Generate the output file path
+    outfile = os.path.join(output_folder_path, folders[-1])
+    outfile = os.path.splitext(outfile)[0] + ".generated." + datetime.now().strftime("%Y%m%d_%H%M") + ".md"
+
+    return outfile
+
+
+def process_docpic_tags(infile: str, outfile: str, img_dir: str) -> List[str]:
+    docpic_img_dir = os.path.join(os.path.dirname(outfile), img_dir)
 
     # Does the input file have any docpic tags?
     in_text = read_file(infile)
@@ -45,7 +63,7 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
 
     if len(yaml_array) == 0:
         print("\nNo docpic sections found in document")
-        return
+        return []
 
     image_tags = []
 
@@ -64,13 +82,9 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
         image_tags.append(image_tag)
 
     section_count = len(image_tags)
-
-    # Now replace the content with the results
-    new_content = process_markup(in_text, image_tags)
-    write_file(new_content, outfile)
-
     print("\nReplaced " + str(section_count) + " docpic tag(s) with image tags.")
-    print("\nOutput is in " + outfile)
+
+    return image_tags
 
 
 if __name__ == '__main__':

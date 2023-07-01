@@ -5,7 +5,7 @@ from jsonschema.exceptions import ValidationError
 
 
 def validate_yaml_schema(config):
-    with open("../schema/docpic.json", "r") as file:  # Todo: Make this work if running from root folder
+    with open("../schema/docpic.json", "r") as file:
         schema = json.load(file)
 
     # Validate the YAML config against the schema
