@@ -1,5 +1,6 @@
 # This module is intended to process incoming .md files and pass relevant yaml back.
 # Note that for the moment we're assuming that what's between the docpic tags is yaml; this may change.
+import os
 import re
 from typing import List
 
@@ -35,6 +36,7 @@ def process_markup(markdown_text: str, new_sections: List[str]):
 
 def write_file(new_content: str, filename: str):
     # Write the modified content back to the input file
+
     try:
         with open(filename, 'w') as file:
             file.write(new_content)

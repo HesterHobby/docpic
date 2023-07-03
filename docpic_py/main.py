@@ -5,11 +5,6 @@ from docpic_py.selenium_processor import take_screenshot_from_yaml_file
 
 # Run docpic example
 if __name__ == '__main__':
-    # sort out working dirs
-    path = os.getcwd()
-    testpath = os.path.normpath("python/docpic")
-    if testpath in path:  # We need to run from the root folder.
-        os.chdir("/")
 
     print(f"\nworking directory is {os.getcwd()}")
     # Uncomment the relevant section(s) to run.

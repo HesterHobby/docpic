@@ -11,11 +11,16 @@ from docpic_py.selenium_processor import take_screenshot_from_yaml
 
 @click.command()
 @click.option("--infile", help="The location of your infile, relative to the current working directory.")
-@click.option("--outfile", help="Output file, relative to the current working directory.")
+@click.option("--outfile", help="Output file, relative to the current working directory. Defaults to 'out'")
 @click.option("--img-dir", default="assets", help="Output folder, relative to the output folder. Defaults to 'assets'.")
 @click.option("--overwrite-existing", is_flag=True, help="When specified, this overwrites the [docpic]..[/docpic] "
                                                          "sections in your input file.")
 def docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwrite_existing: bool = False):
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # Change the current working directory to the script's directory to make everything work.
+    os.chdir(current_dir)
+    print(f"\nworking directory is {os.getcwd()}")
     run_docpic(infile, outfile, img_dir, overwrite_existing)
 
 
@@ -25,9 +30,11 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
         outfile = infile
 
     if not outfile:
-        outfile = generate_output_file_path(infile)
-    else:
-        output_folder_path = os.path.dirname(outfile)
+        outfile = generate_output_file_path()
+    # else:
+    output_folder_path = os.path.dirname(outfile)
+    print("Output folder path is " + output_folder_path)
+    os.makedirs(output_folder_path, exist_ok=True)  # Create the output folder path if it doesn't exist
 
     image_tags = process_docpic_tags(infile, outfile, img_dir)
 
@@ -39,17 +46,13 @@ def run_docpic(infile: str, outfile: str = None, img_dir: str = "assets", overwr
     print("\nOutput is in " + outfile)
 
 
-def generate_output_file_path(infile: str) -> str:
-    # Convert the input file path to the platform-specific format
-    infile = os.path.normpath(infile)
-
-    # Extract the folder names from the input file path
-    folders = infile.split(os.path.sep)
-    output_folder_path = os.path.join("out", *folders[1:-1])
+def generate_output_file_path() -> str:
+    # Create the output folder path
+    output_folder_path = os.path.join(os.getcwd(), "out")
 
     # Generate the output file path
-    outfile = os.path.join(output_folder_path, folders[-1])
-    outfile = os.path.splitext(outfile)[0] + ".generated." + datetime.now().strftime("%Y%m%d_%H%M") + ".md"
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+    outfile = os.path.join(output_folder_path, f"output_{timestamp}.md")
 
     return outfile
 

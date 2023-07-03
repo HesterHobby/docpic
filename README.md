@@ -40,10 +40,11 @@ should run on all platforms.
   For example, the following will run docpic on the included example yaml file and
     save the output into a folder called "assets": 
  
-  `python docpic_py/docpic.py --infile yaml_and_markup/example_md_config.md --img-dir assets/`.
+  `python docpic_py/docpic.py --infile ../yaml_and_markup/example_md_config.md --img-dir assets/`. 
 
-  If no output name is specified and the optional `--overwrite-existing` flag is not set, like in this example, the output 
-    markdown file will be saved in the format `out/[input_name].generated.[YYMMDD_hhmm].md` using the system date.
+  Note that the working directory for the process is `docpic_py`, so make sure the path to the markup folder is correct.
+  Also note that if no output name is specified and the optional `--overwrite-existing` flag is not set, like in this example, the output
+    markdown file will be saved in the format `out/[input_name].generated.[YYMMDD_hhmm].md` using the system date, in the working directory.
 
 ## YAML structure
 
