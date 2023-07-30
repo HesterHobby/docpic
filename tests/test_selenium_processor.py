@@ -3,7 +3,7 @@ import sys
 from unittest import mock
 
 import pytest
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, Mock
 from pytest_mock import MockFixture
 
 from selenium import webdriver
@@ -12,8 +12,9 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
-from docpic_py.selenium_processor import get_element_from_varname, docpic, select, identify, execute_step
-
+from docpic_py import selenium_processor
+from docpic_py.selenium_processor import get_element_from_varname, docpic, select, identify, execute_step, \
+    get_environment_variable
 
 # Add the project root directory to the Python module search path
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -44,6 +45,43 @@ def test_get_element_from_varname_nonexistent_element():
         # Act and Assert
         with pytest.raises(KeyError):
             get_element_from_varname(varname)
+
+
+def test_get_environment_variable_existing_variable():
+    # Arrange
+    envvarname = 'MY_VARIABLE'
+    varname = None
+    with patch.dict(os.environ, {envvarname: 'my_value'}):
+        # Act
+        result = get_environment_variable(envvarname, varname)
+
+        # Assert
+        assert result == 'my_value'
+
+
+def test_get_environment_variable_non_existing_variable():
+    # Arrange
+    envvarname = 'NON_EXISTING_VARIABLE'
+    varname = None
+    with patch.dict(os.environ, clear=True):
+        # Act
+        result = get_environment_variable(envvarname, varname)
+
+        # Assert
+        assert result is None
+
+
+def test_get_environment_variable_store_in_varname():
+    # Arrange
+    envvarname = 'MY_VARIABLE'
+    varname = 'my_var'
+    with patch.dict(os.environ, {envvarname: 'my_value'}), patch('docpic_py.selenium_processor.module_vars', {}):
+        # Act
+        result = get_environment_variable(envvarname, varname)
+
+        # Assert
+        assert result == 'my_value'
+        assert selenium_processor.module_vars[varname] == 'my_value'
 
 
 @pytest.mark.slow
@@ -258,6 +296,9 @@ def test_execute_step_var_ref(mock_identify, mock_get_element_from_varname):
     mock_get_element_from_varname.assert_called_once_with("element1")
 
 
+# Todo: Add a similar test for env-var.
+
+
 # Test case for step type "click"
 def test_execute_step_click(mock_identify, mock_get_element_from_varname, mock_webdriver):
     # Arrange
@@ -326,6 +367,7 @@ def test_execute_step_enter_text(mock_identify, mock_get_element_from_varname, m
     assert not mock_get_element_from_varname.called
     element_mock.send_keys.assert_called_once_with("Hello, World!")
 
+# Todo: Add another test for passing a step as a value.
 
 def test_execute_step_select(mock_identify, mock_get_element_from_varname, mock_webdriver):
     # Arrange

@@ -94,7 +94,12 @@ def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what 
 
     if step_type == "enter-text":
         element = execute_step(step.get("target"), driver) if step.get("target") else None
-        enter_text(element, step.get("value"))
+        # Check if the value is a step, or a plain string.
+        try:
+            text = execute_step(step.get("value"), driver)
+        except AttributeError:
+            text = step.get("value")
+        enter_text(element, text)
 
     if step_type == "select":
         element = execute_step(step.get("target"), driver) if step.get("target") else None

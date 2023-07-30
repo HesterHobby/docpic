@@ -13,7 +13,7 @@ steps:
     var: docpicemail
     env-var-name: "docpicemail"
   - type: env-var
-    var: docipicpass
+    var: docpicpass
     env-var-name: "docpicpass"
   - type: click
     target:
@@ -34,15 +34,17 @@ steps:
       using: id
       selector: "input-email"
     value:
-      type: env-var
-      env-var-name: "docpicemail"
+      type: var-ref
+      var-name: "docpicemail"
   - type: enter-text
     target:
       type: identify
       var: ~
       using: id
       selector: "input-password"
-    value: "pass1"
+    value:
+      type: var-ref
+      var-name: "docpicpass"
   - type: click
     target:
       type: identify
@@ -55,3 +57,5 @@ steps:
       var: ~
       using: link
       selector: "Qafox.com"
+  - type: wait
+    value: 5
