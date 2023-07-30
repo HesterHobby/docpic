@@ -80,6 +80,10 @@ def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what 
         element = get_element_from_varname(step.get("var-name"))
         return element
 
+    if step_type == "env-var":
+        envvar = get_environment_variable(step.get("env-var"), step.get("var"))
+        return envvar
+
     if step_type == "click":
         element = execute_step(step.get("target"), driver) if step.get("target") else None
         click(element)
@@ -184,3 +188,15 @@ def get_element_from_varname(varname: str) -> WebElement:
     if element is None:
         raise KeyError(f"\nThe element variable {varname} does not exist in the module level variables")
     return element
+
+
+def get_environment_variable(envvarname: str, varname: str):
+    try:
+        var = os.getenv(envvarname)
+    except NoSuchElementException:
+        print(f"\nThe environment variable {envvarname} was not found")
+        raise
+
+    if varname is not None:
+        module_vars[varname] = var
+    return var

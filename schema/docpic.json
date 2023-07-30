@@ -38,6 +38,26 @@
             "required": ["type", "var-name"],
             "additionalProperties": false
         },
+        "envVarNode":{
+            "type" : "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "env-var"
+                },
+                "env-var": {
+                    "type": "string"
+                },
+                "var":  {
+                    "anyOf": [
+                        {"type": "null"},
+                        {"type": "string"}
+                    ]
+                }
+            },
+            "required": ["type", "env-var"],
+            "additionalProperties": false
+        },
         "clickNode": {
             "type": "object",
             "properties": {

@@ -85,6 +85,11 @@ reference of the element.
 The `var-ref` step simply passes a variable to the calling step. It's only additional property is `var-name`, 
 which is the name of the variable being passed.
 
+### Step type: `env-var`
+The `env-var` step obtains an environment variable to use, and optionally stores it in a docpic variable.
+* `env-var`: Required. The name of the environment variable that is being read.
+* `var`: Optional. The variable that this environment variable will be stored in.
+
 ### Step types: `click`, `enter-text`, `clear`, `select`
 These action steps all follow a similar format.
 * `target`: Required. The element receiving the action. This is either a `var-ref` step, or a `identify` step.

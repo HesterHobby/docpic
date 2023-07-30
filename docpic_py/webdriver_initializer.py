@@ -1,7 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.common import WebDriverException
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager  # I am using version 3.8.6 of webdriver_manager, as newer
+                                                          # versions fail to download chrome for me.
 
 
 def initialize_driver(webdriver_options):
