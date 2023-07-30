@@ -9,10 +9,49 @@ webdriver_options:
 # Define the steps that will be carried out by the script before the screenshot is taken.
 
 steps:
+  - type: env-var
+    var: docpicemail
+    env-var-name: "docpicemail"
+  - type: env-var
+    var: docipicpass
+    env-var-name: "docpicpass"
   - type: click
     target:
       type: identify
       var: ~
       using: css
       selector: "span.caret"
-  - type:
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: link
+      selector: "Login"
+  - type: enter-text
+    target:
+      type: identify
+      var: ~
+      using: id
+      selector: "input-email"
+    value:
+      type: env-var
+      env-var-name: "docpicemail"
+  - type: enter-text
+    target:
+      type: identify
+      var: ~
+      using: id
+      selector: "input-password"
+    value: "pass1"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: css
+      selector: "input.btn.btn-primary"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: link
+      selector: "Qafox.com"

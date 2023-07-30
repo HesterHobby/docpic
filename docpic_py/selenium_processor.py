@@ -81,7 +81,7 @@ def execute_step(step, driver: webdriver, output_folder=None):  # Not sure what 
         return element
 
     if step_type == "env-var":
-        envvar = get_environment_variable(step.get("env-var"), step.get("var"))
+        envvar = get_environment_variable(step.get("env-var-name"), step.get("var"))
         return envvar
 
     if step_type == "click":
