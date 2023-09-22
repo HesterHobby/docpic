@@ -19,15 +19,15 @@ return_vars = {}
 
 
 # This function simply exists to allow the user to write yaml and check the correct screenshots are being taken.
-def take_screenshot_from_yaml_file(config_file: str, output_folder: str = None):
+def take_screenshot_from_yaml_file(config_file: str, output_folder: str = None, driver: webdriver = None, quit_driver: bool = True):
     if not os.path.isfile(config_file):
         raise FileNotFoundError(f"\nFile '{config_file}' does not exist.")
     with open(config_file, 'r') as file:
         input_yaml = file.read()
-    take_screenshot_from_yaml(input_yaml, output_folder)
+    take_screenshot_from_yaml(input_yaml, output_folder, driver, quit_driver)
 
 
-def take_screenshot_from_yaml(input_yaml: str, output_folder: str = None) -> Dict[str, str]:
+def take_screenshot_from_yaml(input_yaml: str, output_folder: str = None, driver: webdriver = None, quit_driver: bool = True) -> Dict[str, str]:
     # Load the YAML configuration file
     try:
         config = yaml.safe_load(input_yaml)
@@ -41,27 +41,36 @@ def take_screenshot_from_yaml(input_yaml: str, output_folder: str = None) -> Dic
         return {}
 
     # Extract the configuration values
-    url = config['url']
+    #url = config['url']
+    url = config.get('url', None)
+    initial_conditions = config.get('initial-conditions', None)
     steps = config['steps']
 
     # Get options from the YAML data, if available
-    options = config.get('webdriver_options', None)
+    options = config.get('webdriver-options', None)
 
-    # Launch ChromeDriver with the specified path and options
-    driver = initialize_driver(options)
+    # Launch ChromeDriver with the specified path and options if required
+    if not driver:
+        driver = initialize_driver(options)
 
-    if driver is None:
-        print("\nDriver initialisation failed")
-        return {}
+        if driver is None:
+            print("\nDriver initialisation failed")
+            return {}
 
-    # Visit the specified URL
-    driver.get(url)
+    # Initial conditions?
+    if initial_conditions:
+        take_screenshot_from_yaml_file(initial_conditions, None, driver, False)
+
+    # Visit the specified URL, if given.
+    if url:
+        driver.get(url)
 
     # Send it off to recursive function to deal with steps.
     for step in steps:
         execute_step(step, driver, output_folder)
 
-    driver.quit()
+    if quit_driver:
+        driver.quit()
     return return_vars
 
 

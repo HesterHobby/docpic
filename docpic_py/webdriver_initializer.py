@@ -2,16 +2,18 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.common import WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager  # I am using version 3.8.6 of webdriver_manager, as newer
-                                                          # versions fail to download chrome for me.
+
+
+# versions fail to download chrome for me.
 
 
 def initialize_driver(webdriver_options):
     options = webdriver.ChromeOptions()
 
-    if 'headless' in webdriver_options and webdriver_options['headless']:
+    if webdriver_options and 'headless' in webdriver_options and webdriver_options['headless']:
         options.add_argument('--headless')
 
-    if webdriver_options is not None:
+    if webdriver_options:
         for option, value in webdriver_options.items():
             if option != 'headless':
                 options.add_argument(f"--{option}={value}")

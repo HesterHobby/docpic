@@ -14,12 +14,24 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from docpic_py import selenium_processor
 from docpic_py.selenium_processor import get_element_from_varname, docpic, select, identify, execute_step, \
-    get_environment_variable
+    get_environment_variable, take_screenshot_from_yaml_file
+from docpic_py.webdriver_initializer import initialize_driver
 
 # Add the project root directory to the Python module search path
 current_dir = os.path.dirname(os.path.realpath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.insert(0, project_root)
+
+
+@pytest.mark.slow
+def test_screenshot_from_yaml_file_with_initial_condition(tmp_path):
+    # Arrange. Note the yaml file also tests the initial condition, and running headless.
+    yaml_file = "./inputs/test_config.dp.yaml"
+    outfile = tmp_path / "test.png"
+
+    take_screenshot_from_yaml_file(yaml_file, str(tmp_path))
+
+    assert outfile.exists()
 
 
 def test_get_element_from_varname_existing_element():
@@ -88,7 +100,7 @@ def test_get_environment_variable_store_in_varname():
 def test_docpic_saves_screenshot(tmp_path):
     # Arrange
     outfile = tmp_path / "screenshot.png"
-    driver_mock = webdriver.Chrome()
+    driver_mock = initialize_driver(None)
 
     # Act
     docpic(driver_mock, str(outfile))
@@ -101,7 +113,7 @@ def test_docpic_saves_screenshot(tmp_path):
 def test_docpic_handles_exception(tmp_path, capsys):
     # Arrange
     outfile = tmp_path / "screenshot.png"
-    driver_mock = webdriver.Chrome()
+    driver_mock = initialize_driver(None)
 
     # Patch the save_screenshot method to raise an exception
     with patch.object(driver_mock, 'save_screenshot', side_effect=Exception):
@@ -118,7 +130,7 @@ def test_docpic_handles_exception(tmp_path, capsys):
 def test_docpic_raises_exception_if_file_not_created(tmp_path):
     # Arrange
     outfile = tmp_path / "non_existent_folder/screenshot.png"
-    driver_mock = webdriver.Chrome()
+    driver_mock = initialize_driver(None)
 
     # Act and Assert
     with pytest.raises(Exception) as exc_info:
@@ -440,6 +452,5 @@ def test_execute_step_docpic(mocker):
     save_screenshot_mock.assert_called_once_with("screenshot.png")
     exists_mock.assert_called_once_with("screenshot.png")
 
-# Add test cases for other step types (wait, docpic)
 # Add test case for invalid step type
 

@@ -51,8 +51,12 @@ should run on all platforms.
 The raw schema for docpic is in `schema/docpic.json`. An example working schema is in `example_config.dp.yaml`. 
 
 In its most basic form, the config for docpic looks as follows:
+* `initial-conditions`: The path to a docpic yaml which specifies initial steps.
 * `url`: The initial URL that webdriver should open
-* `webdriver_options`: Any webdriver options that you would like to add. This will accept anything from 
+
+  Either `url` OR `initial-conditions` must be present in the yaml.
+
+* `webdriver-options`: Any webdriver options that you would like to add. This will accept anything from 
 https://peter.sh/experiments/chromium-command-line-switches/
 * `steps`: An array of steps that webdriver will follow.
 
@@ -82,7 +86,7 @@ The `identify` step has various options for obtaining the element, and what to d
 reference of the element.
 
 ### Step type: `var-ref`
-The `var-ref` step simply passes a variable to the calling step. It's only additional property is `var-name`, 
+The `var-ref` step simply passes a variable to the calling step. Its only additional property is `var-name`, 
 which is the name of the variable being passed.
 
 ### Step type: `env-var`
@@ -94,6 +98,7 @@ The `env-var` step obtains an environment variable to use, and optionally stores
 These action steps all follow a similar format.
 * `target`: Required. The element receiving the action. This is either a `var-ref` step, or a `identify` step.
 * `value`: For `enter-text` and `select` nodes only, the string being entered or selected, respectively. 
+   The `enter-text` node also accepts a `var-ref` step as its value  
 
 ### Step type: `wait`
 Docpic takes care of waiting for elements to be available, but sometimes it is necessary to build in a hard

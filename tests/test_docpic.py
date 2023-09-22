@@ -10,16 +10,16 @@ from os import path
 def test_docpic_with_params(tmp_path):
     outfile = tmp_path / "test.md"
     out_image = tmp_path / "img/test.png"
-    run_docpic("../yaml_and_markup/example_md_config.md", str(outfile), "img")
+    run_docpic("./inputs/test_md_config.md", str(outfile), "img")
     assert path.exists(outfile)
     assert path.exists(out_image)
 
 
 # Note this only runs from the command line, the IDE gives a weird error.
+@pytest.mark.slow
 def test_run_from_command_line():
     # Define the command to run your process
-    command = "python ../docpic_py/docpic.py --infile ../yaml_and_markup/example_md_config.md --img-dir assets/"
-
+    command = "python ../docpic_py/docpic.py --infile ../tests/inputs/test_md_config.md --img-dir assets/"
     # Run the command and capture the output
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 

@@ -1,0 +1,63 @@
+# Initial URL
+url: 'https://tutorialsninja.com/demo/'
+
+# Webdriver options as per https://peter.sh/experiments/chromium-command-line-switches/
+webdriver-options:
+  headless: false
+  window-size: "1280,900"
+
+# Define the steps that will be carried out by the script
+# Note: for this example script to function, the environment variables
+# must be set up in your system.
+
+steps:
+  - type: env-var
+    var: docpicemail
+    env-var-name: "docpicemail"
+  - type: env-var
+    var: docpicpass
+    env-var-name: "docpicpass"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: css
+      selector: "span.caret"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: link
+      selector: "Login"
+  - type: enter-text
+    target:
+      type: identify
+      var: ~
+      using: id
+      selector: "input-email"
+    value:
+      type: var-ref
+      var-name: "docpicemail"
+  - type: enter-text
+    target:
+      type: identify
+      var: ~
+      using: id
+      selector: "input-password"
+    value:
+      type: var-ref
+      var-name: "docpicpass"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: css
+      selector: "input.btn.btn-primary"
+  - type: click
+    target:
+      type: identify
+      var: ~
+      using: link
+      selector: "Qafox.com"
+  - type: wait
+    value: 5

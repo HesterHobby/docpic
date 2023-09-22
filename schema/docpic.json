@@ -168,8 +168,9 @@
     },
     "type": "object",
     "properties": {
+        "initial-conditions": {"type": "string"},
         "url": {"type": "string"},
-        "webdriver_options": {
+        "webdriver-options": {
             "type": "object",
             "additionalProperties": true
         },
@@ -189,5 +190,13 @@
                 ]
             }
         }
+    },
+  "oneOf": [
+    {
+      "required": ["url"]
+    },
+    {
+      "required": ["initial-conditions"]
     }
+  ]
 }

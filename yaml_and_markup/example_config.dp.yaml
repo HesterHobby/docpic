@@ -1,13 +1,16 @@
-# Initial URL
+# Initial conditions: a pointer to a file which carries out a common task, such as logging in.
+# Note that for the below yaml to work, you must set up your environment variables.
+# initial-conditions: "../yaml_and_markup/login.dp.yaml"
+
+# Or use initial URL - if no initial conditions are required
 url: 'https://tutorialsninja.com/demo/'
 
 # Webdriver options as per https://peter.sh/experiments/chromium-command-line-switches/
-webdriver_options:
+webdriver-options:
   headless: false
   window-size: "1280,900"
 
-# Define the steps that will be carried out by the script before the screenshot is taken.
-
+# Define the steps that will be carried out by the script, and then take the screenshot.
 steps:
   - type: identify
     var: search

@@ -1,24 +1,12 @@
-# Docpic Markdown example
-
-## A proof of concept
-
-This is a simple paragraph
-
-This is another paragraph with an unordered list
-* So that I can show it is unaffected
-* Just because it looks cool
-* In order to fill the page a bit
-
-[docpic] # Initial URL
-url: 'https://tutorialsninja.com/demo/'
+# Initial conditions: a pointer to a file which carries out a common task, such as logging in.
+initial-conditions: "../yaml_and_markup/login.dp.yaml"
 
 # Webdriver options as per https://peter.sh/experiments/chromium-command-line-switches/
 webdriver-options:
   headless: false
-  window-size: "1280,1200"
+  window-size: "1280,900"
 
-# Define the steps that will be carried out by the script before the screenshot is taken.
-
+# Define the steps that will be carried out by the script, and then take the screenshot.
 steps:
   - type: identify
     var: search
@@ -73,6 +61,8 @@ steps:
       var: ~
       using: id
       selector: "button-cart"
+  - type: wait
+    value: 3
   - type: identify
     var: ~
     using: css
@@ -80,9 +70,4 @@ steps:
   - type: docpic # docpic could be extended, I would like this to be able to focus on a particular element.
     outfile: "test.png" # Ideally there would be a post-processing step that can highlight elements of interest or add text or both.
     alt-text: "A test image"
-[/docpic]
-**We could add an image title, if we wanted**
 
-## Here's another section
-
-_There is some more text here._ Just because.
